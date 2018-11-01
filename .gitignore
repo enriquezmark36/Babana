@@ -1,0 +1,14 @@
+# React-native and npm
+# Can be regenerated using npm install or yarn install
+# Ignore to save space
+/node_modules/
+yarn.lock
+
+# KDE dolphin shenanigans
+.directory
+
+# Android app by react-antive
+# Exclude gradle, build files and keystores used for signing
+/android/.gradle
+/android/app/build/
+*.keystore
