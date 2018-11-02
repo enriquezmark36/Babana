@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { Component } from 'react';
-import {AppRegistry, StatusBar, View, StyleSheet} from 'react-native';
+import {AppRegistry, View, StyleSheet} from 'react-native';
 import { TouchableRipple, Drawer, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import { Provider as StoreProvider } from 'react-redux';
@@ -56,7 +56,7 @@ const ScreenStack = createDrawerNavigator(
   { Home: { screen: AppContainer } },
   {
     contentComponent: () => (
-        <View style={{top: 28}} >
+        <View>
           <Drawer.Section title="Section Label">
             <TouchableRipple
               onPress={() => {}}
@@ -80,7 +80,6 @@ export default function Main() {
   return (
     <StoreProvider store={store}>
       <PaperProvider theme={theme}>
-        <StatusBar backgroundColor="rgba(0, 0, 0, 0.2)" translucent />
         <PersistGate loading={<LoadingScreen/>} persistor={persistor}>
           <ScreenStack />
         </PersistGate>

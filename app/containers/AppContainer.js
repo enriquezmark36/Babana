@@ -18,7 +18,7 @@ class AppContainer extends Component {
   render () {
     return (
       <View style={{flex:1}}>
-        <StatusBar backgroundColor="rgba(0, 0, 0, 0.2)" translucent />
+        <StatusBar backgroundColor="#c8b900"/>
 
         <Home {...this.props} />
 

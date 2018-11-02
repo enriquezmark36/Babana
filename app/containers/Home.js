@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     flex:1,
   },
   topBar: {
-    marginTop: 28,
     flexDirection: 'row',
     alignItems: 'center',
   },
