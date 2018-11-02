@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import {
   Button,
   Appbar,
@@ -23,6 +22,14 @@ import {
 } from 'react-native';
 import AlarmListView from '../components/AlarmListView';
 
+// Redux + thunk, functions as actions
+import { ActionCreators } from '../actions';
+import { bindActionCreators }  from 'redux';
+import { connect } from 'react-redux';
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch);
+}
 
 function mapStateToProps(state) {
   return {
@@ -100,7 +107,6 @@ class Home extends Component {
           * Lists all alarms
           */}
         <AlarmListView {...this.props} style={styles.addAlarmSection} />
-
       </View>
     );
   }
@@ -130,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

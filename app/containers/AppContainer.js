@@ -1,32 +1,18 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators }  from 'redux';
-import { ActionCreators } from '../actions';
-import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
-import Home from './Home'
+import { AppStack } from '../components/AppStack'
 import ReactNative from 'react-native';
 const {
   View,
   StatusBar,
 } = ReactNative;
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(ActionCreators, dispatch);
-}
-
-class AppContainer extends Component {
+export default class AppContainer extends Component {
   render () {
     return (
       <View style={{flex:1}}>
-        <StatusBar backgroundColor="#c8b900"/>
-
-        <Home {...this.props} />
-
+        <StatusBar backgroundColor="#c8b900" />
+        <AppStack/>
       </View>
     );
   }
 }
-
-export default connect((state) => {
-  return { }
-}, mapDispatchToProps)(AppContainer);

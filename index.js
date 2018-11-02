@@ -1,9 +1,8 @@
 /** @format */
 
 import React, { Component } from 'react';
-import {AppRegistry, View, StyleSheet} from 'react-native';
-import { TouchableRipple, Drawer, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
+import { AppRegistry } from 'react-native';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
@@ -14,9 +13,6 @@ import reducer from './app/reducers';
 import AppContainer from './app/containers/AppContainer';
 import LoadingScreen from './app/components/LoadingScreen';
 
-import {
-  Text
-} from 'react-native';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { PersistGate } from 'redux-persist/lib/integration/react';
@@ -52,36 +48,12 @@ const theme = {
   },
 };
 
-const ScreenStack = createDrawerNavigator(
-  { Home: { screen: AppContainer } },
-  {
-    contentComponent: () => (
-        <View>
-          <Drawer.Section title="Section Label">
-            <TouchableRipple
-              onPress={() => {}}
-              rippleColor="rgba(0, 0, 0, .32)"
-            >
-              <Drawer.Item label="Settings?" />
-            </TouchableRipple>
-            <TouchableRipple
-              onPress={() => {}}
-              rippleColor="rgba(0, 0, 0, .32)"
-            >
-              <Drawer.Item label="Leche Ayaw ko na" />
-            </TouchableRipple>
-          </Drawer.Section>
-        </View>
-    ),
-  }
-);
-
 export default function Main() {
   return (
     <StoreProvider store={store}>
       <PaperProvider theme={theme}>
         <PersistGate loading={<LoadingScreen/>} persistor={persistor}>
-          <ScreenStack />
+          <AppContainer />
         </PersistGate>
       </PaperProvider>
     </StoreProvider>
