@@ -1,6 +1,6 @@
 import { combineReducers }  from 'redux';
-import * as xxxReducers from './xxx';
+import * as AlarmReducers from './alarm';
 
 export default combineReducers( Object.assign(
-  xxxReducers,
+  AlarmReducers,
 ));

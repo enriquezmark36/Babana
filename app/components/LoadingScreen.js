@@ -10,11 +10,8 @@ export default class LoadingScreen extends Component {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#9c27b0',
-        }}>
-      <Image
-
-        source={require('../../Resources/banana.png')}
-      />
+      }}>
+        <Image source={require('../../Resources/banana.png')} />
       </View>
     );
   }

@@ -1,11 +1,5 @@
 import * as types from './types';
 
-export function addThat() {
-  return {
-      type: types.ADD_THAT,
-  }
-}
-
 export function insertAlarm(alarm) {
   return (dispatch, getState) => {
       console.log('action: insert alarm: ...');
