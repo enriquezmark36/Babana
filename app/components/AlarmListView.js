@@ -9,7 +9,14 @@ import {
   withTheme,
 } from 'react-native-paper';
 
-class AlarmListView extends Component {
+import type { Theme } from 'react-native-paper/types';
+
+type Props = {
+  theme: Theme,
+  navigation: any,
+};
+
+class AlarmListView extends Component<Props> {
   _keyExtractor = item => item.id.toString();
 
   _renderItem = ({item}) => (

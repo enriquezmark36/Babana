@@ -44,6 +44,27 @@ class Home extends Component {
     this.state = {
       testAddAlarmName: '',
     };
+    something = this;
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: Home._header(navigation),
+    }
+  };
+
+  static _header(navigation) {
+    return (<Appbar.Header style={styles.topBar}>
+      <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
+      <Appbar.Content title="Babana Home" />
+      <Appbar.Action
+        icon="add"
+        onPress={() =>{
+          console.log(navigation);
+          navigation.push('AddAlarm');
+        }}
+      />
+    </Appbar.Header>);
   }
 
   _addAlarm() {
@@ -65,27 +86,6 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-      {/*
-        * Application Bar
-        */}
-        <Appbar.Header style={styles.topBar}>
-          <Appbar.Action
-            icon="menu"
-            onPress={() =>{
-              console.log('Pressed menu');
-              this.props.navigation.toggleDrawer();
-            }}
-          />
-          <Appbar.Content title="Babana" />
-          <Appbar.Action
-            icon="add"
-            onPress={() =>{
-              console.log('Going to add an Alarm');
-              this._addAlarm();
-            }}
-          />
-        </Appbar.Header>
-
         {/*
           * TESTING: Add alarm by name
           */}

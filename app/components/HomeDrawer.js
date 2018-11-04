@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
-import { TouchableRipple, Drawer } from 'react-native-paper';
-import Home from '../containers/Home';
+import { createDrawerNavigator } from 'react-navigation';
+import { TouchableRipple, Drawer, withTheme } from 'react-native-paper';
+import AppStack from '../components/AppStack';
 
-export const HomeDrawer = createDrawerNavigator(
-  { Home: { screen: Home }},
+export default createDrawerNavigator(
+  { Home: { screen: AppStack }},
   {
     contentComponent: () => (
         <View>
