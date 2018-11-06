@@ -2,8 +2,11 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { Appbar } from 'react-native-paper';
 import Home from '../containers/Home';
+import AddAlarm from '../containers/AddAlarm';
 
-const AppScreens = {};
+const AppScreens = {
+  AddAlarm: AddAlarm,
+};
 
 const routes = Object.keys(AppScreens)
   .map(id => ({ id, item: AppScreens[id] }))
