@@ -8,7 +8,8 @@ yarn.lock
 .directory
 
 # Android app by react-antive
-# Exclude gradle, build files and keystores used for signing
+# Exclude gradle, build files, API Keys, and keystores used for signing
 /android/.gradle
 /android/app/build/
+/android/app/src/main/res/values/api-keys.xml
 *.keystore
