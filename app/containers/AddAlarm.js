@@ -61,7 +61,7 @@ class AddAlarm extends Component {
           }}
         >
         </MapView>
-        <View style={styles.swipeContainer}>
+        <View style={styles.listContainer}>
         </View>
       </View>
     );
@@ -73,11 +73,11 @@ const styles = StyleSheet.create({
     flex:1,
   },
   map: {
-    flex: 41,
+    flex: 11,
     alignSelf: 'stretch',
   },
-  swipeContainer: {
-    flex: 28,
+  listContainer: {
+    flex: 13,
     backgroundColor: 'green',
   }
 });
