@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import Paper from 'react-native-paper';
+import * as Paper from 'react-native-paper';
 import ReactNative from 'react-native';
 import MapView from 'react-native-maps';
 import { ActionCreators } from '../actions';
 import { bindActionCreators }  from 'redux';
 import { connect } from 'react-redux';
+
+const {
+  Appbar,
+} = Paper;
 
 const {
   View,
@@ -27,6 +31,23 @@ class AddAlarm extends Component {
     };
   }
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header:(
+        <Appbar.Header style={styles.topBar}>
+          <Appbar.BackAction onPress={() => navigation.pop()} />
+          <Appbar.Content title="Add Alarm" />
+          <Appbar.Action
+            icon="add"
+            onPress={() =>{
+              console.log(navigation);
+            }}
+          />
+        </Appbar.Header>
+      )
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -40,6 +61,8 @@ class AddAlarm extends Component {
           }}
         >
         </MapView>
+        <View style={styles.swipeContainer}>
+        </View>
       </View>
     );
   }
@@ -50,9 +73,13 @@ const styles = StyleSheet.create({
     flex:1,
   },
   map: {
-    height: 300,
-    width: 300,
+    flex: 41,
+    alignSelf: 'stretch',
   },
+  swipeContainer: {
+    flex: 28,
+    backgroundColor: 'green',
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddAlarm);
