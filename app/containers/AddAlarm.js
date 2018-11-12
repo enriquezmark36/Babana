@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 const {
   Appbar,
+  Chip,
 } = Paper;
 
 const {
@@ -61,6 +62,11 @@ class AddAlarm extends Component {
           }}
         >
         </MapView>
+        <Chip style={styles.etaChip}
+              onPress={() => console.log('Pressed')}
+        >
+          Time to Destination: 59 minutes
+        </Chip>
         <View style={styles.listContainer}>
         </View>
       </View>
@@ -70,6 +76,7 @@ class AddAlarm extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'white',
     flex:1,
   },
   map: {
@@ -79,7 +86,11 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 13,
     backgroundColor: 'green',
-  }
+  },
+  etaChip: {
+    alignSelf: 'center',
+    backgroundColor: 'yellow',
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddAlarm);
