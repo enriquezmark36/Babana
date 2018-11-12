@@ -19,10 +19,12 @@ const routes = Object.keys(AppScreens)
         header: (
           <Appbar.Header>
             <Appbar.BackAction onPress={() => props.navigation.goBack()} />
-            <Appbar.Content title={(Comp: any).title} />
+            <Appbar.Content title={"Template"} />
           </Appbar.Header>
         ),
       });
+    else
+      Screen.navigationOptions = Comp.navigationOptions;
 
     return {
       ...acc,
