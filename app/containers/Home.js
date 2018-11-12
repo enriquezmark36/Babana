@@ -49,23 +49,21 @@ class Home extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      header: Home._header(navigation),
+      header: (
+        <Appbar.Header style={styles.topBar}>
+          <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
+          <Appbar.Content title="Babana" />
+          <Appbar.Action
+            icon="add-alarm"
+            onPress={() =>{
+              console.log(navigation);
+              navigation.push('AddAlarm');
+            }}
+          />
+        </Appbar.Header>
+      )
     }
   };
-
-  static _header(navigation) {
-    return (<Appbar.Header style={styles.topBar}>
-      <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
-      <Appbar.Content title="Babana Home" />
-      <Appbar.Action
-        icon="add"
-        onPress={() =>{
-          console.log(navigation);
-          navigation.push('AddAlarm');
-        }}
-      />
-    </Appbar.Header>);
-  }
 
   _addAlarm() {
     if (this.state.testAddAlarmName === '')
