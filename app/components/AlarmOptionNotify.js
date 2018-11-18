@@ -9,7 +9,6 @@ const {
   withTheme,
   IconButton,
   Colors,
-  Switch,
 } = Paper;
 
 const {

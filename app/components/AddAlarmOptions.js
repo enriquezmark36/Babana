@@ -28,9 +28,9 @@ export default class AddAlarmOptions extends PureComponent<Props> {
       <List.Item
         title={item.key}
         style={styles.listItem}
-        right={() => item.item.right(this.props)}
-        left={() => item.item.right(this.props)}
-        onPress={() => item.item.onPress(this.props)}
+        right={(props) => item.item.right({...this.props, ...props})}
+        left={(props) => item.item.left({...this.props, ...props})}
+        onPress={(props) => item.item.onPress({...this.props, ...props})}
       />
     );
   };
