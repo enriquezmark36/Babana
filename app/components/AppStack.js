@@ -3,9 +3,13 @@ import { createStackNavigator } from 'react-navigation';
 import { Appbar } from 'react-native-paper';
 import Home from '../containers/Home';
 import AddAlarm from '../containers/AddAlarm';
+import AlarmNotify from '../containers/AlarmNotify';
+import ContactPicker from '../containers/ContactPicker';
 
 const AppScreens = {
   AddAlarm: AddAlarm,
+  AlarmNotify: AlarmNotify,
+  ContactPicker: ContactPicker,
 };
 
 const routes = Object.keys(AppScreens)

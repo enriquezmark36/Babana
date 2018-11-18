@@ -10,11 +10,12 @@ import {
 } from 'react-native-paper';
 
 import * as AlarmOptionBlank from '../components/AlarmOptionTemplate'
+import * as AlarmOptionNotify from '../components/AlarmOptionNotify'
 
 const _options = {
   Repeat: AlarmOptionBlank,
   Label: AlarmOptionBlank,
-  Notify: AlarmOptionBlank,
+  Notify: AlarmOptionNotify,
   Ringtone: AlarmOptionBlank,
   Vibrate: AlarmOptionBlank,
 };
