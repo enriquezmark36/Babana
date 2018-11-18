@@ -5,6 +5,7 @@ import MapView from 'react-native-maps';
 import { ActionCreators } from '../actions';
 import { bindActionCreators }  from 'redux';
 import { connect } from 'react-redux';
+import AddAlarmOptions from '../components/AddAlarmOptions';
 
 const {
   Appbar,
@@ -13,6 +14,7 @@ const {
 
 const {
   View,
+  Text,
   StyleSheet,
 } = ReactNative;
 
@@ -39,6 +41,7 @@ class AddAlarm extends Component {
           <Appbar.BackAction onPress={() => navigation.pop()} />
           <Appbar.Content title="Add Alarm" />
           <Appbar.Action
+            disabled={true}
             icon="add"
             onPress={() =>{
               console.log(navigation);
@@ -52,7 +55,9 @@ class AddAlarm extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <MapView
+        <View style={styles.map}>
+          <Text> Dummy map </Text>
+        {/*<MapView
           style={styles.map}
           region={{
             latitude: 37.78825,
@@ -61,13 +66,15 @@ class AddAlarm extends Component {
             longitudeDelta: 0.0121,
           }}
         >
-        </MapView>
+        </MapView> */}
+        </View>
         <Chip style={styles.etaChip}
               onPress={() => console.log('Pressed')}
         >
           Time to Destination: 59 minutes
         </Chip>
         <View style={styles.listContainer}>
+          <AddAlarmOptions {...this.props} />
         </View>
       </View>
     );
@@ -85,7 +92,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 13,
-    backgroundColor: 'green',
   },
   etaChip: {
     alignSelf: 'center',
