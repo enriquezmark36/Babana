@@ -1,0 +1,3 @@
+rootProject.name = 'babana'
+
+include ':app'
