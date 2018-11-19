@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {View, Dimensions} from 'react-native';
+import {Text, View, Dimensions} from 'react-native';
+import {Container, Content, Button} from 'native-base';
 import MapView from 'react-native-maps';
 
 import styles from "./MapContainerStyles.js";
@@ -17,58 +18,49 @@ export default class Map extends Component{
         super(props)
 
         this.state ={
-            intialPosition:{
+            mapPosition:{
                 latitude: 14.599512,
                 longitude: 120.984222,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             },
-            markerPosition:{
-                latitude: 14.599512,
-                longitude: 120.984222,
-            }
         }
     }
-
 
     watchID: ?number = null
 
     componentDidMount(){
         navigator.geolocation.getCurrentPosition((position) => {
-            var lat = parseFloat(position.coords.latitude);
-            var long = parseFloat(position.coords.longitude);
 
             const initialRegion={
-                latitude: lat,
-                longitude: long,
+                latitude: parseFloat(position.coords.latitude),
+                longitude: parseFloat(position.coords.longitude),
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             }
 
 
-            this.setState({initialPosition: initialRegion});
-            this.setState({markerPosition: initialRegion});
+            this.setState({mapPosition: initialRegion});
 
             },
             (error)=>alert(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000})
+            {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
 
         this.watchID = navigator.geolocation.watchPosition((position) => {
-                var lat = parseFloat(position.coords.latitude);
-                var long = parseFloat(position.coords.longitude);
+
 
                 const lastRegion={
-                    latitude: lat,
-                    longitude: long,
+                    latitude: parseFloat(position.coords.latitude),
+                    longitude: parseFloat(position.coords.longitude),
                     latitudeDelta: LATITUDE_DELTA,
                     longitudeDelta: LONGITUDE_DELTA
                 }
 
-                this.setState({initialPosition: lastRegion});
-                this.setState({markerPosition: lastRegion});
-                alert(this.state.initialPosition.latitude);
+                this.setState({mapPosition: lastRegion});
+                //this.setState({markerPosition: lastRegion});
             },
-            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: true})
+            (error)=>alert(JSON.stringify(error)),
+            {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: true})
     }
 
     componentWillUnmount(){
@@ -81,9 +73,17 @@ export default class Map extends Component{
                 <MapView
                     provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
                     style = {styles.map}
-                    region = {this.state.intialPosition}
+                    region = {this.state.mapPosition}
+                    showsUserLocation={true}
+					showsMyLocationButton={true}
+					showsCompass={true}
+					followsUserLocation={true}
+					loadingEnabled={true}
+					toolbarEnabled={true}
+					zoomEnabled={true}
+					rotateEnabled={true}
                 >
-                <MapView.Marker coordinate = {this.state.markerPosition}></MapView.Marker>
+
                 </MapView>
             </View>
         )
