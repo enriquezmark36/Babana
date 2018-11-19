@@ -23,18 +23,12 @@ const instructions = Platform.select({
 type Props = {};
 export default class App extends Component<Props> {
   render() {
-      const region = {
-          latitude: 14.599512,
-          longitude: 120.984222,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
-      }
       return (
          <Container>
             <Header>
                 <Title>Babana!</Title>
             </Header>
-            <Map region={region}/>
+            <Map />
          </Container>
       );
   }
