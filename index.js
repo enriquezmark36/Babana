@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
@@ -16,6 +15,11 @@ import LoadingScreen from './app/components/LoadingScreen';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { PersistGate } from 'redux-persist/lib/integration/react';
+
+import getTheme from './native-base-theme/components';
+import banana from './native-base-theme/variables/material';
+import { StyleProvider } from 'native-base';
+
 /* Create logger that only activates in Dev mode */
 const loggerMiddlerware = createLogger( { predicate: (getState, action) => __DEV__} );
 
@@ -39,23 +43,14 @@ function  configureStore(initialState) {
 const store = configureStore({});
 const persistor = persistStore(store);
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: 'yellow',
-    accent: 'purple',
-  },
-};
-
 export default function Main() {
   return (
     <StoreProvider store={store}>
-      <PaperProvider theme={theme}>
+      <StyleProvider style={getTheme(banana)}>
         <PersistGate loading={<LoadingScreen/>} persistor={persistor}>
           <AppContainer />
         </PersistGate>
-      </PaperProvider>
+      </StyleProvider>
     </StoreProvider>
   );
 }
