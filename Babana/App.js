@@ -8,6 +8,10 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+//import MapView from 'react-native-maps';
+
+import {Container, Title, Header, Body} from 'native-base';
+import Map from "./components/MapContainer";
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -19,22 +23,32 @@ const instructions = Platform.select({
 type Props = {};
 export default class App extends Component<Props> {
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
+      return (
+         <Map />
+      );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    // flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // backgroundColor: '#F5FCFF',
+    position: 'absolute',
+    top: 0,
+    left:0,
+    bottom:0,
+    right:0,
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  map:{
+      position: 'absolute',
+      top: 0,
+      left:0,
+      bottom:0,
+      right:0
   },
   welcome: {
     fontSize: 20,
