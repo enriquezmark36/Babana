@@ -11,6 +11,7 @@ const {
   Button,
   Icon,
   Title,
+  Right,
 } = NativeBase;
 
 // Define your additional Screens/Pages here
@@ -40,6 +41,7 @@ const routes = Object.keys(AppScreens)
             <Body>
               <Title>{id}</Title>
             </Body>
+            <Right />
           </Header>
         )
       });
