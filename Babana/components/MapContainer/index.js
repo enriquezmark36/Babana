@@ -29,64 +29,94 @@ export default class Map extends Component{
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             },
+            markerPosition:{
+                latitude: 14.599512,
+                longitude: 120.984222
+            },
+            donuts: 2,
         }
     }
 
     watchID: ?number = null
 
     componentDidMount(){
-        // navigator.geolocation.getCurrentPosition((position) => {
-        //     // const initialRegion={
-        //     //     latitude: parseFloat(position.coords.latitude),
-        //     //     longitude: parseFloat(position.coords.longitude),
-        //     //     latitudeDelta: LATITUDE_DELTA,
-        //     //     longitudeDelta: LONGITUDE_DELTA
-        //     // }
-        //
-        //
-        //     this.setState({mapPosition: {
-        //         latitude: position.coords.latitude,
-        //         longitude: position.coords.longitude,
-        //         latitudeDelta: LATITUDE_DELTA,
-        //         longitudeDelta: LONGITUDE_DELTA
-        //     }});
-        //
-        //     },
-        //     (error)=>alert(JSON.stringify(error)),
-        //     {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
+        navigator.geolocation.getCurrentPosition((position) => {
+            // const initialRegion={
+            //     latitude: parseFloat(position.coords.latitude),
+            //     longitude: parseFloat(position.coords.longitude),
+            //     latitudeDelta: LATITUDE_DELTA,
+            //     longitudeDelta: LONGITUDE_DELTA
+            // }
 
-        // this.watchID = navigator.geolocation.watchPosition((position) => {
-        //
-        //         // const lastRegion={
-        //         //     latitude: parseFloat(position.coords.latitude),
-        //         //     longitude: parseFloat(position.coords.longitude),
-        //         //     latitudeDelta: LATITUDE_DELTA,
-        //         //     longitudeDelta: LONGITUDE_DELTA
-        //         // }
-        //
-        //         this.setState({mapPosition: {
-        //             latitude: position.coords.latitude,
-        //             longitude: position.coords.longitude,
-        //             latitudeDelta: LATITUDE_DELTA,
-        //             longitudeDelta: LONGITUDE_DELTA
-        //         }});
-        //         //this.setState({markerPosition: lastRegion});
-        //     },
-        //     (error)=>alert(JSON.stringify(error)),
-        //     {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: true})
-        RNGGooglePlaces.getCurrentPlace()
-            .then((results)=>{this.setState({mapPosition:{
-                latitude: results[0].latitude,
-                longitude: results[0].longitude,
+
+            this.setState({mapPosition: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
-            }})
-            })
-            .catch((error) => console.log(error.message));
+            }});
+            this.setState({markerPosition: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            }});
+            },
+            (error)=>alert(JSON.stringify(error)),
+            {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
+
+        this.watchID = navigator.geolocation.watchPosition((position) => {
+
+                // const lastRegion={
+                //     latitude: parseFloat(position.coords.latitude),
+                //     longitude: parseFloat(position.coords.longitude),
+                //     latitudeDelta: LATITUDE_DELTA,
+                //     longitudeDelta: LONGITUDE_DELTA
+                // }
+
+                this.setState({mapPosition: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA
+                }});
+            },
+            (error)=>alert(JSON.stringify(error)),
+            {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: false})
+        //RNGGooglePlaces.openPlacePickerModal()
+        // .then((place)=>{this.setState({mapPosition:{
+        //     latitude: results[0].latitude,
+        //     longitude: results[0].longitude,
+        //     latitudeDelta: LATITUDE_DELTA,
+        //     longitudeDelta: LONGITUDE_DELTA
+        // }})
+        // this.setState({
+        //     markerPosition:{
+        //         latitude:results[0].latitude,
+        //         longitude:results[0].longitude
+        //     }
+        // })
+        // })
+        // .catch(error=>console.log(error.message))
+    }
+
+    openSearchModal(){
+        RNGGooglePlaces.openPlacePickerModal()
+        .then((place)=>{this.setState({mapPosition:{
+            latitude: place.latitude,
+            longitude: place.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+        }})
+        this.setState({
+            markerPosition:{
+                latitude:place.latitude,
+                longitude:place.longitude
+            }
+        })
+        })
+        .catch(error=>console.log(error.message))
     }
 
     findMe(){
-        alert("Find ME!");
         RNGGooglePlaces.getCurrentPlace()
             .then((results)=>{this.setState({mapPosition:{
                 latitude: results[0].latitude,
@@ -118,10 +148,10 @@ export default class Map extends Component{
 					zoomEnabled={true}
 					rotateEnabled={true}
                 >
-
+                <MapView.Marker coordinate={this.state.markerPosition} />
                 </MapView>
-                <SearchBox />
-                <SearchResults />
+                <Button light onPress={this.openSearchModal.bind(this)}><Text>Search</Text></Button>
+                <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
             </Container>
         );
     }
