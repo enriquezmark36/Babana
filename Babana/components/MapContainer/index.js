@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {Text, View, Dimensions} from 'react-native';
 import {Container, Content, Button} from 'native-base';
+
 import MapView from 'react-native-maps';
+import RNGGooglePlaces from 'react-native-google-places';
 
 import styles from "./MapContainerStyles.js";
 
-<<<<<<< HEAD
+import SearchResults from "../SearchResults";
 import SearchBox from "../SearchBox";
 
-=======
->>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
 const{width, height} = Dimensions.get('window');
 
 const SCREEN_HEGIHT = height;
@@ -35,45 +35,67 @@ export default class Map extends Component{
     watchID: ?number = null
 
     componentDidMount(){
-        navigator.geolocation.getCurrentPosition((position) => {
-            // const initialRegion={
-            //     latitude: parseFloat(position.coords.latitude),
-            //     longitude: parseFloat(position.coords.longitude),
-            //     latitudeDelta: LATITUDE_DELTA,
-            //     longitudeDelta: LONGITUDE_DELTA
-            // }
+        // navigator.geolocation.getCurrentPosition((position) => {
+        //     // const initialRegion={
+        //     //     latitude: parseFloat(position.coords.latitude),
+        //     //     longitude: parseFloat(position.coords.longitude),
+        //     //     latitudeDelta: LATITUDE_DELTA,
+        //     //     longitudeDelta: LONGITUDE_DELTA
+        //     // }
+        //
+        //
+        //     this.setState({mapPosition: {
+        //         latitude: position.coords.latitude,
+        //         longitude: position.coords.longitude,
+        //         latitudeDelta: LATITUDE_DELTA,
+        //         longitudeDelta: LONGITUDE_DELTA
+        //     }});
+        //
+        //     },
+        //     (error)=>alert(JSON.stringify(error)),
+        //     {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
 
-
-            this.setState({mapPosition: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
+        // this.watchID = navigator.geolocation.watchPosition((position) => {
+        //
+        //         // const lastRegion={
+        //         //     latitude: parseFloat(position.coords.latitude),
+        //         //     longitude: parseFloat(position.coords.longitude),
+        //         //     latitudeDelta: LATITUDE_DELTA,
+        //         //     longitudeDelta: LONGITUDE_DELTA
+        //         // }
+        //
+        //         this.setState({mapPosition: {
+        //             latitude: position.coords.latitude,
+        //             longitude: position.coords.longitude,
+        //             latitudeDelta: LATITUDE_DELTA,
+        //             longitudeDelta: LONGITUDE_DELTA
+        //         }});
+        //         //this.setState({markerPosition: lastRegion});
+        //     },
+        //     (error)=>alert(JSON.stringify(error)),
+        //     {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: true})
+        RNGGooglePlaces.getCurrentPlace()
+            .then((results)=>{this.setState({mapPosition:{
+                latitude: results[0].latitude,
+                longitude: results[0].longitude,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
-            }});
+            }})
+            })
+            .catch((error) => console.log(error.message));
+    }
 
-            },
-            (error)=>alert(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
-
-        this.watchID = navigator.geolocation.watchPosition((position) => {
-
-                // const lastRegion={
-                //     latitude: parseFloat(position.coords.latitude),
-                //     longitude: parseFloat(position.coords.longitude),
-                //     latitudeDelta: LATITUDE_DELTA,
-                //     longitudeDelta: LONGITUDE_DELTA
-                // }
-
-                this.setState({mapPosition: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA
-                }});
-                //this.setState({markerPosition: lastRegion});
-            },
-            (error)=>alert(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: true})
+    findMe(){
+        alert("Find ME!");
+        RNGGooglePlaces.getCurrentPlace()
+            .then((results)=>{this.setState({mapPosition:{
+                latitude: results[0].latitude,
+                longitude: results[0].longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA
+            }})
+            })
+            .catch((error) => console.log(error.message));
     }
 
     componentWillUnmount(){
@@ -82,21 +104,13 @@ export default class Map extends Component{
 
     render() {
         return(
-<<<<<<< HEAD
             <Container>
-=======
-            <View style={styles.container}>
->>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
                 <MapView
                     provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
                     style = {styles.map}
                     region = {this.state.mapPosition}
                     showsUserLocation={true}
-<<<<<<< HEAD
-                    showsMyLocationBUtton={true}
-=======
 					showsMyLocationButton={true}
->>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
 					showsCompass={true}
 					followsUserLocation={true}
 					loadingEnabled={true}
@@ -106,13 +120,10 @@ export default class Map extends Component{
                 >
 
                 </MapView>
-<<<<<<< HEAD
                 <SearchBox />
+                <SearchResults />
             </Container>
-=======
-            </View>
->>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
-        )
+        );
     }
 }
 
