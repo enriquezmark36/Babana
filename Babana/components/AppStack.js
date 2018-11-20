@@ -1,6 +1,17 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
+import * as NativeBase from 'native-base';
+
 import App from '../components/App'
+
+const {
+  Header,
+  Body,
+  Left,
+  Button,
+  Icon,
+  Title,
+} = NativeBase;
 
 // Define your additional Screens/Pages here
 // You may write it something like this:
@@ -19,7 +30,18 @@ const routes = Object.keys(AppScreens)
 
     if (typeof Comp.navigationOptions === 'undefined')
       Screen.navigationOptions = (props) => ({
-        header: null
+        header: (
+          <Header>
+            <Left>
+              <Button transparent onPress={() => props.navigation.goBack()}>
+                <Icon name="arrow-back" />
+              </Button>
+            </Left>
+            <Body>
+              <Title>{id}</Title>
+            </Body>
+          </Header>
+        )
       });
     else
       Screen.navigationOptions = Comp.navigationOptions;
