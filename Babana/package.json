@@ -12,6 +12,7 @@
     "react-native": "0.57.5",
     "react-native-contacts": "^2.2.4",
     "react-native-gesture-handler": "^1.0.9",
+    "react-native-google-places": "^2.5.2",
     "react-native-maps": "^0.22.1",
     "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^3.0.0"
