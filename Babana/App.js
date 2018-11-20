@@ -24,7 +24,16 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
       return (
+<<<<<<< HEAD
          <Map />
+=======
+         <Container>
+            <Header>
+                <Title>Babana!</Title>
+            </Header>
+            <Map />
+         </Container>
+>>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
       );
   }
 }

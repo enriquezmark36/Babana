@@ -5,8 +5,11 @@ import MapView from 'react-native-maps';
 
 import styles from "./MapContainerStyles.js";
 
+<<<<<<< HEAD
 import SearchBox from "../SearchBox";
 
+=======
+>>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
 const{width, height} = Dimensions.get('window');
 
 const SCREEN_HEGIHT = height;
@@ -33,7 +36,6 @@ export default class Map extends Component{
 
     componentDidMount(){
         navigator.geolocation.getCurrentPosition((position) => {
-
             // const initialRegion={
             //     latitude: parseFloat(position.coords.latitude),
             //     longitude: parseFloat(position.coords.longitude),
@@ -54,7 +56,6 @@ export default class Map extends Component{
             {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
 
         this.watchID = navigator.geolocation.watchPosition((position) => {
-
 
                 // const lastRegion={
                 //     latitude: parseFloat(position.coords.latitude),
@@ -81,13 +82,21 @@ export default class Map extends Component{
 
     render() {
         return(
+<<<<<<< HEAD
             <Container>
+=======
+            <View style={styles.container}>
+>>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
                 <MapView
                     provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
                     style = {styles.map}
                     region = {this.state.mapPosition}
                     showsUserLocation={true}
+<<<<<<< HEAD
                     showsMyLocationBUtton={true}
+=======
+					showsMyLocationButton={true}
+>>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
 					showsCompass={true}
 					followsUserLocation={true}
 					loadingEnabled={true}
@@ -97,8 +106,12 @@ export default class Map extends Component{
                 >
 
                 </MapView>
+<<<<<<< HEAD
                 <SearchBox />
             </Container>
+=======
+            </View>
+>>>>>>> 190e0396a33377067ec48d91d757c190f8cc48de
         )
     }
 }
