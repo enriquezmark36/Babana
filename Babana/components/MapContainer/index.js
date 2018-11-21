@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {Text, View, Dimensions} from 'react-native';
-import {Container, Content, Button} from 'native-base';
+import {Container, Content, Button, CardItem} from 'native-base';
 
 import MapView from 'react-native-maps';
 import RNGGooglePlaces from 'react-native-google-places';
+import MapViewDirections from 'react-native-maps-directions';
 
 import styles from "./MapContainerStyles.js";
 
@@ -29,15 +30,29 @@ export default class Map extends Component{
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             },
+            origin:{
+                latitude: 14.599512,
+                longitude: 120.984222
+            },
             markerPosition:{
                 latitude: 14.599512,
                 longitude: 120.984222
             },
-            donuts: 2,
+            distance: 0,
+            timeLeft: 0
         }
     }
 
     watchID: ?number = null
+
+    updateTimeandDistance(newDistance, newTime){
+        this.setState({
+            distance: newDistance
+        });
+        this.setState({
+            timeLeft: newTime
+        })
+    }
 
     componentDidMount(){
         navigator.geolocation.getCurrentPosition((position) => {
@@ -59,9 +74,13 @@ export default class Map extends Component{
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude
             }});
-            },
-            (error)=>alert(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
+            this.setState({origin:{
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            }});
+        },
+        (error)=>alert(JSON.stringify(error)),
+        {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
 
         this.watchID = navigator.geolocation.watchPosition((position) => {
 
@@ -72,11 +91,9 @@ export default class Map extends Component{
                 //     longitudeDelta: LONGITUDE_DELTA
                 // }
 
-                this.setState({mapPosition: {
+                this.setState({origin:{
                     latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA
+                    longitude: position.coords.longitude
                 }});
             },
             (error)=>alert(JSON.stringify(error)),
@@ -118,12 +135,13 @@ export default class Map extends Component{
 
     findMe(){
         RNGGooglePlaces.getCurrentPlace()
-            .then((results)=>{this.setState({mapPosition:{
+            .then((results)=>{
+                this.setState({mapPosition:{
                 latitude: results[0].latitude,
                 longitude: results[0].longitude,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
-            }})
+                }})
             })
             .catch((error) => console.log(error.message));
     }
@@ -133,6 +151,7 @@ export default class Map extends Component{
     }
 
     render() {
+
         return(
             <Container>
                 <MapView
@@ -149,9 +168,24 @@ export default class Map extends Component{
 					rotateEnabled={true}
                 >
                 <MapView.Marker coordinate={this.state.markerPosition} />
+
+                <MapViewDirections
+                    origin = {this.state.origin}
+                    destination = {this.state.markerPosition}
+                    apikey = {'AIzaSyB6-GKz6npAKsFVebEeoc16ALXzuYrSWpE'}
+                    strokeWidth={3}
+                    strokeColor="orange"
+
+                    onReady={(result) => {
+                        this.updateTimeandDistance(result.distance, result.duration);
+                    }}
+                />
+
                 </MapView>
                 <Button light onPress={this.openSearchModal.bind(this)}><Text>Search</Text></Button>
                 <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
+                <CardItem><Text>Distance to Destination: {this.state.distance}</Text></CardItem>
+                <CardItem><Text>Time to Destination: {this.state.timeLeft}</Text></CardItem>
             </Container>
         );
     }
