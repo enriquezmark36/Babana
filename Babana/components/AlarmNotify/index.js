@@ -32,18 +32,7 @@ class AlarmNotify extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      chosenContacts: [
-        {
-          name: "1",
-          number: "1201",
-          id: "1",
-        },
-        {
-          name: "2",
-          number: "2012",
-          id: "2",
-        },
-      ],
+      chosenContacts: [],
       lastIndex: 0,
       text: '',
     };
