@@ -11,7 +11,7 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 //import MapView from 'react-native-maps';
 
 import {Container, Title, Header, Body} from 'native-base';
-import Map from "./components/MapContainer";
+import Map from "./MapContainer";
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
