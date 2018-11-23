@@ -4,7 +4,8 @@ const styles = {
     header:{
         backgroundColor: 'yellow',
     },
-    footer:{
+    footer: {
+        flex: 10,
         backgroundColor: 'yellow',
     },
     container:{
@@ -13,7 +14,7 @@ const styles = {
         alignItems:'center'
     },
     map:{
-        ...StyleSheet.absoluteFillObject
+        flex: 13,
     }
 }
 

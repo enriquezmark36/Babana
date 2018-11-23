@@ -163,6 +163,17 @@ export default class Map extends Component{
     render() {
         return(
             <Container>
+                    <Header>
+                        <Left>
+                            <Button transparent onPress={this.openSearchModal.bind(this)}><Icon name="search" size={30}/></Button>
+                        </Left>
+                        <Body>
+                            <Title style= {{color: 'black'}}>Babana</Title>
+                        </Body>
+                        <Right>
+                            <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
+                        </Right>
+                    </Header>
                     <MapView
                         provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
                         style = {styles.map}
@@ -193,23 +204,14 @@ export default class Map extends Component{
 
                     </MapView>
 
-                    <Header style = {styles.header}>
-                        <Left>
-                            <Button transparent onPress={this.openSearchModal.bind(this)}><Icon name="search" size={30}/></Button>
-                        </Left>
-                        <Body>
-                            <Title style= {{color: 'black'}}>Babana</Title>
-                        </Body>
-                        <Right>
-                            <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
-                        </Right>
-                    </Header>
 
-                    <Card>
+                    <View style={styles.footer}>
+                    <Card >
                         <CardItem>
                             <Text>Time to Destination: {this.state.timeLeft}</Text>
                         </CardItem>
                     </Card>
+                    </View>
 
             </Container>
         );
