@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, Dimensions} from 'react-native';
-import {Container, Content, Button, CardItem} from 'native-base';
+import {Container, Content, Button, CardItem, Header, Footer} from 'native-base';
 
 import MapView from 'react-native-maps';
 import RNGGooglePlaces from 'react-native-google-places';
@@ -141,7 +141,11 @@ export default class Map extends Component{
                 longitude: results[0].longitude,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
-                }})
+                }});
+                this.setState({origin:{
+                    latitude: results[0].latitude,
+                    longitude: results[0].longitude
+                }});
             })
             .catch((error) => console.log(error.message));
     }
@@ -154,6 +158,9 @@ export default class Map extends Component{
 
         return(
             <Container>
+                <Header>
+
+                </Header>
                 <MapView
                     provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
                     style = {styles.map}
