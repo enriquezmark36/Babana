@@ -146,6 +146,9 @@ export default (variables /*: * */ = variable) => {
           lineHeight: null,
           height: variables.searchBarInputHeight
         },
+        "NativeBase.Button": {
+          alignSelf: "center",
+        },
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "flex-start",

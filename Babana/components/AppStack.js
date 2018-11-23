@@ -3,6 +3,8 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 import * as NativeBase from 'native-base';
 
 import App from '../components/App'
+import AlarmNotify from '../components/AlarmNotify'
+import ContactPicker from '../components/AlarmNotify/ContactPicker'
 
 const {
   Header,
@@ -21,6 +23,8 @@ const {
 //   Settings: Settings
 // };
 const AppScreens = {
+  AlarmNotify: AlarmNotify,
+  ContactPicker: ContactPicker,
 };
 
 const routes = Object.keys(AppScreens)
