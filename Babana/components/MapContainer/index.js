@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
 import {Text, View, Dimensions} from 'react-native';
-import {Container, Content, Button, CardItem, Header, Footer} from 'native-base';
+import {Container, Content, Button, Header, Footer, FooterTab, Left, Body, Right, Title, Card, CardItem} from 'native-base';
 
 import MapView from 'react-native-maps';
 import RNGGooglePlaces from 'react-native-google-places';
 import MapViewDirections from 'react-native-maps-directions';
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 import styles from "./MapContainerStyles.js";
-
-import SearchResults from "../SearchResults";
-import SearchBox from "../SearchBox";
 
 const{width, height} = Dimensions.get('window');
 
@@ -18,6 +16,7 @@ const SCREEN_WIDTH = width;
 const APECT_RATIO = width/height;
 const LATITUDE_DELTA = 0.022;
 const LONGITUDE_DELTA = LATITUDE_DELTA*APECT_RATIO;
+const apiKey = process.env.GOOGLE_API_KEY;
 
 export default class Map extends Component{
     constructor(props){
@@ -39,7 +38,8 @@ export default class Map extends Component{
                 longitude: 120.984222
             },
             distance: 0,
-            timeLeft: 0
+            timeLeft: 0,
+            isMapReady: false
         }
     }
 
@@ -51,7 +51,13 @@ export default class Map extends Component{
         });
         this.setState({
             timeLeft: newTime
-        })
+        });
+    }
+
+    onMapLayout(){
+        this.setState({
+            isMapReady: true
+        });
     }
 
     componentDidMount(){
@@ -155,65 +161,57 @@ export default class Map extends Component{
     }
 
     render() {
-
         return(
             <Container>
-                <Header>
+                    <MapView
+                        provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
+                        style = {styles.map}
+                        region = {this.state.mapPosition}
+                        showsUserLocation={true}
+                        showsMyLocationButton={true}
+                        showsCompass={true}
+                        followsUserLocation={true}
+                        loadingEnabled={true}
+                        toolbarEnabled={true}
+                        zoomEnabled={true}
+                        rotateEnabled={true}
+                        onLayout = {this.onMapLayout.bind(this)}
+                    >
+                    <MapView.Marker coordinate={this.state.markerPosition} />
 
-                </Header>
-                <MapView
-                    provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
-                    style = {styles.map}
-                    region = {this.state.mapPosition}
-                    showsUserLocation={true}
-					showsMyLocationButton={true}
-					showsCompass={true}
-					followsUserLocation={true}
-					loadingEnabled={true}
-					toolbarEnabled={true}
-					zoomEnabled={true}
-					rotateEnabled={true}
-                >
-                <MapView.Marker coordinate={this.state.markerPosition} />
+                    <MapViewDirections
+                        origin = {this.state.origin}
+                        destination = {this.state.markerPosition}
+                        apikey = {"AIzaSyB6-GKz6npAKsFVebEeoc16ALXzuYrSWpE"}
+                        strokeWidth={3}
+                        strokeColor="orange"
 
-                <MapViewDirections
-                    origin = {this.state.origin}
-                    destination = {this.state.markerPosition}
-                    apikey = {'AIzaSyB6-GKz6npAKsFVebEeoc16ALXzuYrSWpE'}
-                    strokeWidth={3}
-                    strokeColor="orange"
+                        onReady={(result) => {
+                            this.updateTimeandDistance(result.distance, result.duration);
+                        }}
+                    />
 
-                    onReady={(result) => {
-                        this.updateTimeandDistance(result.distance, result.duration);
-                    }}
-                />
+                    </MapView>
 
-                </MapView>
-                <Button light onPress={this.openSearchModal.bind(this)}><Text>Search</Text></Button>
-                <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
-                <CardItem><Text>Distance to Destination: {this.state.distance}</Text></CardItem>
-                <CardItem><Text>Time to Destination: {this.state.timeLeft}</Text></CardItem>
+                    <Header style = {styles.header}>
+                        <Left>
+                            <Button transparent onPress={this.openSearchModal.bind(this)}><Icon name="search" size={30}/></Button>
+                        </Left>
+                        <Body>
+                            <Title style= {{color: 'black'}}>Babana</Title>
+                        </Body>
+                        <Right>
+                            <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
+                        </Right>
+                    </Header>
+
+                    <Card>
+                        <CardItem>
+                            <Text>Time to Destination: {this.state.timeLeft}</Text>
+                        </CardItem>
+                    </Card>
+
             </Container>
         );
     }
 }
-
-// export default class Map extends Component{
-//     render(){
-//         return(
-//             <View style={styles.container}>
-//                 <MapView
-//                     provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
-//                     style = {styles.map}
-//                     region = {{
-//                         latitude: 14.599512,
-//                         longitude: 120.984222,
-//                         latitudeDelta: 0.0922,
-//                         longitudeDelta: 0.0421
-//                     }}
-//                 >
-//                 </MapView>
-//             </View>
-//         )
-//     }
-// };
