@@ -7,10 +7,10 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 //import MapView from 'react-native-maps';
 
-import {Container, Title, Header, Body} from 'native-base';
+import {Container, Title, Header, Body, Text, Button} from 'native-base';
 import Map from "./MapContainer";
 
 const instructions = Platform.select({
@@ -28,7 +28,9 @@ export default class App extends Component<Props> {
   }
   render() {
       return (
-         <Map />
+        <Button onPress={() => this.props.navigation.navigate("AlarmScreen")}>
+          <Text>Run Alarm</Text>
+        </Button>
       );
   }
 }

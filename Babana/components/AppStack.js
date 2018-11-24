@@ -5,6 +5,7 @@ import * as NativeBase from 'native-base';
 import App from '../components/App'
 import AlarmNotify from '../components/AlarmNotify'
 import ContactPicker from '../components/AlarmNotify/ContactPicker'
+import AlarmScreen from '../components/AlarmScreen';
 
 const {
   Header,
@@ -25,6 +26,7 @@ const {
 const AppScreens = {
   AlarmNotify: AlarmNotify,
   ContactPicker: ContactPicker,
+  AlarmScreen: AlarmScreen,
 };
 
 const routes = Object.keys(AppScreens)
