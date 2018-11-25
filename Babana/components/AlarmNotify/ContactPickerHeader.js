@@ -50,8 +50,7 @@ export const NormalHeader = (navigation) => (
       <Button transparent
         disabled={!navigation.getParam('canSave', false)}
         onPress={ () => {
-            navigation.getParam('saveFunc', () => {})
-                      (navigation.getParam('saveCallback', ()=>{}));
+            navigation.getParam('saveFunc', () => {})();
             navigation.pop();
         }} >
           <Icon name="save" />

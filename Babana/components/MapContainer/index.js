@@ -160,14 +160,14 @@ export default class Map extends Component{
     //
     _showNotifyPage() {
       const {contactList, message, lastIndex} = this.state;
+      const mapStateToParent = this._mapChildToState.bind(this);
 
-      const mapComponentToProps = this._mapComponentToProps.bind(this);
       this.props.navigation.navigate('AlarmNotify',
-        {mapComponentToProps, contactList, message, lastIndex});
+        {mapStateToParent, contactList, message, lastIndex});
     }
 
     // Save the props from a Alarm Notify Page
-    _mapComponentToProps(contactList, message, lastIndex){
+    _mapChildToState(contactList, message, lastIndex){
       this.setState({contactList, message, lastIndex});
     }
 

@@ -22,7 +22,7 @@ export default class ContactsListView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contactList: null,
+      contacts: null,
     };
   }
 
@@ -59,7 +59,7 @@ export default class ContactsListView extends Component {
       <View style={styles.container}>
         <List
           style={styles.listContainer}
-          dataArray={this.props.contactList}
+          dataArray={this.props.contacts}
           renderRow={this._renderItem}
         />
       </View>

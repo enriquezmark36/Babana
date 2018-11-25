@@ -47,16 +47,13 @@ class ContactPicker extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      contactFullList: null,
-      contactList: null,
+      contactsCopy: null,
+      contacts: null,
       loadingList: true,
       loadingMessage: 'Loading',
-      chosenNumbers: [],
-      indxCounter: 0,
+      contactList: [],
+      lastIndex: 0,
     };
-    this._filter = this._filter.bind(this);
-    this._addNumber = this._addNumber.bind(this);
-    this._writeBackContacts = this._writeBackContacts.bind(this);
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -77,42 +74,37 @@ class ContactPicker extends PureComponent {
     };
   };
 
-  _writeBackContacts(callback) {
-    const {chosenNumbers, indxCounter} = this.state;
-    callback(chosenNumbers, indxCounter);
-  }
-
   _addNumber = (name, number, id) => {
-    const {chosenNumbers} = this.state;
+    const {contactList} = this.state;
     const {navigation} = this.props;
 
-    if (chosenNumbers.length === 0)
+    if (contactList.length === 0)
       navigation.setParams({canSave: true});
 
     this.setState((state, props) => {
       return {
-        chosenNumbers: [...state.chosenNumbers,
+        contactList: [...state.contactList,
           {
             number: number,
             fullname: name,
-            id: state.indxCounter.toString() + id,
+            id: state.lastIndex.toString() + id,
           }
         ],
-        indxCounter: state.indxCounter + 1,
+        lastIndex: state.lastIndex + 1,
       };
     })
   }
 
   _removeNumber = (index) => {
-    const {chosenNumbers} = this.state;
+    const {contactList} = this.state;
     const {navigation} = this.props;
 
-    if (chosenNumbers.length === 1)
+    if (contactList.length === 1)
       navigation.setParams({canSave: false});
 
-    tmp = [...this.state.chosenNumbers];
+    tmp = [...this.state.contactList];
     tmp.splice(index, 1);
-    this.setState({chosenNumbers: tmp});
+    this.setState({contactList: tmp});
   }
 
   _filter = (query) => {
@@ -120,9 +112,9 @@ class ContactPicker extends PureComponent {
       return;
 
     if (query === "") {
-      this.setState({contactList: this.state.contactFullList});
+      this.setState({contacts: this.state.contactsCopy});
     } else {
-      contactList = this.state.contactFullList
+      contacts = this.state.contactsCopy
           .filter((item) => {
             if (item.fullname.toLowerCase().indexOf(query) != -1)
               return true;
@@ -130,7 +122,7 @@ class ContactPicker extends PureComponent {
             return false;
           });
 
-      this.setState({contactList});
+      this.setState({contacts});
     }
   }
 
@@ -155,8 +147,8 @@ class ContactPicker extends PureComponent {
           }).sort((a, b) => a.fullname.localeCompare(b.fullname));
 
       this.setState({
-        contactList: output,
-        contactFullList: output,
+        contacts: output,
+        contactsCopy: output,
         loadingList: false,
       });
   }
@@ -176,6 +168,15 @@ class ContactPicker extends PureComponent {
     return false;
   }
 
+  _save() {
+    const {navigation} = this.props;
+    const {contactList, lastIndex} = this.state;
+
+    callback = navigation.getParam('mapStateToParent', () => {});
+
+    callback(contactList, message, lastIndex);
+  }
+
   componentDidMount() {
     const {navigation} = this.props;
 
@@ -183,19 +184,19 @@ class ContactPicker extends PureComponent {
     Contacts.getAll(this._createPreReqKeys);
 
     // Restore (or rehydrate) state back
-    initialList = navigation.getParam('initialList', []);
-    indxCounter = navigation.getParam('lastIndex', 0);
+    contactList = navigation.getParam('contactList', []);
+    lastIndex = navigation.getParam('lastIndex', 0);
     this.setState({
-        chosenNumbers: initialList,
-        indxCounter: indxCounter,
+      contactList: contactList,
+      lastIndex: lastIndex,
     })
 
-    // Pass callback functions to Appbar component
+    // Pass functions to Appbar component
     navigation.setParams({
-      filter: this._filter,
-      addNumber: this._addNumber,
-      saveFunc: this._writeBackContacts,
-      canSave: (initialList.length !== 0),
+      filter: this._filter.bind(this),
+      addNumber: this._addNumber.bind(this),
+      saveFunc: this._save.bind(this),
+      canSave: (contactList.length !== 0),
     });
 
     // Allow going back to default app bar using the
@@ -210,11 +211,11 @@ class ContactPicker extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        { (this.state.chosenNumbers.length !== 0) && (
+        { (this.state.contactList.length !== 0) && (
           <ScrollView
             style={styles.scrollArea}
             contentContainerStyle={styles.chipArea} >
-              {this.state.chosenNumbers.map((item, index) => (
+              {this.state.contactList.map((item, index) => (
                   <Button rounded light small
                     style={styles.chip}
                     key={item.id}
@@ -236,7 +237,7 @@ class ContactPicker extends PureComponent {
             </View>
           ) || (
             <ContactsListView
-              contactList={this.state.contactList}
+              contacts={this.state.contacts}
               callbackAdd={this._addNumber} />
           )
           }

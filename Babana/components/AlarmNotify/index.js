@@ -32,11 +32,10 @@ class AlarmNotify extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      chosenContacts: [],
+      contactList: [],
       lastIndex: 0,
-      text: '',
+      message: '',
     };
-    this._saveContactsToState = this._saveContactsToState.bind(this);
     this._toggleSaveIfPossible = this._toggleSaveIfPossible.bind(this);
   }
 
@@ -60,9 +59,8 @@ class AlarmNotify extends PureComponent {
                 disabled={!params.canSave}
                 onPress={ () => {
                   params.saveFunc();
-                  navigation.goBack();
-                }} >
-                  <Icon name="save"/>
+                  navigation.goBack();}} >
+                    <Icon name="save"/>
               </Button>
             </Right>
         </Header>
@@ -70,20 +68,17 @@ class AlarmNotify extends PureComponent {
     }
   };
 
-  _saveContactsToState(contactList, lastIndex) {
-    this.setState({
-      chosenContacts: contactList,
-      lastIndex: lastIndex,
-    });
-    this._toggleSaveIfPossible(contactList, this.state.text);
+  _mapChildToState(contactList, lastIndex) {
+    this.setState({contactList, lastIndex});
+    this._toggleSaveIfPossible(contactList, this.state.message);
   }
 
   // Don't try use the state, especially if you've used setState
-  // Before this. The state would be one step back.
-  _toggleSaveIfPossible(chosenContacts, text){
+  // Before this, The state would be one step back.
+  _toggleSaveIfPossible(contactList, message){
     const {navigation} = this.props;
 
-    if ((chosenContacts.length !==0 ) && (text.length !== 0)) {
+    if ((contactList.length !==0 ) && (message.length !== 0)) {
       navigation.setParams({canSave: true});
       return;
     }
@@ -94,22 +89,20 @@ class AlarmNotify extends PureComponent {
 
 
   _showContactPicker(push) {
+    const { contactList, lastIndex } = this.state;
+    const mapStateToParent = this._mapChildToState.bind(this);
+
     push('ContactPicker',
-          {
-            saveCallback:  this._saveContactsToState,
-            initialList: this.state.chosenContacts,
-            lastIndex: this.state.lastIndex,
-          }
-        );
+          {mapStateToParent, contactList, lastIndex});
   }
 
-  _writeBackToParent() {
+  _save() {
     const {navigation} = this.props;
-    const {chosenContacts, text, lastIndex} = this.state;
+    const {contactList, message, lastIndex} = this.state;
 
-    callback = navigation.getParam('mapComponentToProps', () => {});
+    callback = navigation.getParam('mapStateToParent', () => {});
 
-    callback(chosenContacts, text, lastIndex);
+    callback(contactList, message, lastIndex);
   }
 
   componentDidMount() {
@@ -121,14 +114,14 @@ class AlarmNotify extends PureComponent {
     lastIndex = navigation.getParam('lastIndex', 0);
     saveFunc = navigation.getParam('mapComponentToProps', () => {});
     this.setState({
-        chosenContacts: contactList,
-        text: message,
+        contactList: contactList,
+        message: message,
         lastIndex: lastIndex,
     })
 
     // Pass callback functions to Appbar component
     navigation.setParams({
-      saveFunc: this._writeBackToParent.bind(this),
+      saveFunc: this._save.bind(this),
       canSave: (contactList.length !== 0),
     });
   }
@@ -136,7 +129,7 @@ class AlarmNotify extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        { (this.state.chosenContacts.length !== 0) && (
+        { (this.state.contactList.length !== 0) && (
           <View>
             <Text>Selected Contacts:</Text>
             <ScrollView style={styles.scrollArea} >
@@ -145,7 +138,7 @@ class AlarmNotify extends PureComponent {
                 style={styles.psuedoButton}
                 onPress={() => this._showContactPicker(this.props.navigation.push)} >
                   <View style={styles.chipArea}>
-                    {Chip(this.state.chosenContacts, true)}
+                    {Chip(this.state.contactList, true)}
                   </View>
               </TouchableNativeFeedback>
             </ScrollView>
@@ -153,9 +146,7 @@ class AlarmNotify extends PureComponent {
         ) || (
           <Button full
             style={styles.selectContactsButton}
-            onPress={() => this.props.navigation
-                .push('ContactPicker',
-                      {saveCallback: this._saveContactsToState,})} >
+            onPress={() => this._showContactPicker(this.props.navigation.push)}>
               <Text>Select Contacts</Text>
           </Button>
         )}
@@ -165,12 +156,12 @@ class AlarmNotify extends PureComponent {
             rowSpan={5}
             bordered
             placeholder="Message"
-            value={this.state.text}
+            value={this.state.message}
             multiline = {true}
             maxLength={160}
-            onChangeText={text => {
-              this.setState({text:text});
-              this._toggleSaveIfPossible(this.state.chosenContacts, text);
+            onChangeText={message => {
+              this.setState({message});
+              this._toggleSaveIfPossible(this.state.contactList, message);
             }} />
         </Form>
       </View>
