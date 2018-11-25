@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions} from 'react-native';
+import {Text, View, Dimensions, ScrollView} from 'react-native';
 import {Container, Content, Button, Header, Footer, FooterTab, Left, Body, Right, Title, Card, CardItem} from 'native-base';
 
 import MapView from 'react-native-maps';
@@ -242,6 +242,7 @@ export default class Map extends Component{
 
 
                     <View style={styles.footer}>
+                    <ScrollView>
                     <Card>
                         <CardItem>
                             <Text>Time to Destination: {Math.ceil(this.state.timeLeft)} minutes</Text>
@@ -258,6 +259,7 @@ export default class Map extends Component{
                         {notifyState}
                       </CardItem>
                     </Card>
+                    </ScrollView>
                     </View>
 
             </Container>
