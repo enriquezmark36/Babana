@@ -41,7 +41,10 @@ export default class Map extends Component{
             distance: 0,
             timeLeft: 0,
             isMapReady: false,
-            isAlarmOn: false
+            isAlarmOn: false,
+            contactList: [],
+            message: '',
+            lastIndex: 0,
         }
     }
 
@@ -152,6 +155,23 @@ export default class Map extends Component{
         clearInterval(this.interval);
     }
 
+    //
+    // For Alarm Notify Page
+    //
+    _showNotifyPage() {
+      const {contactList, message, lastIndex} = this.state;
+
+      const mapComponentToProps = this._mapComponentToProps.bind(this);
+      this.props.navigation.navigate('AlarmNotify',
+        {mapComponentToProps, contactList, message, lastIndex});
+    }
+
+    // Save the props from a Alarm Notify Page
+    _mapComponentToProps(contactList, message, lastIndex){
+      this.setState({contactList, message, lastIndex});
+    }
+
+
     render() {
         if(this.state.isAlarmOn){
             alarmState = <Text>Deactivate alarm</Text>
@@ -218,6 +238,15 @@ export default class Map extends Component{
                             {alarmState}
                         </CardItem>
 
+                    </Card>
+                    <Card>
+                      <CardItem button onPress={this._showNotifyPage.bind(this)}>
+                        {(this.state.contactList.length !== 0) &&
+                          (<Text>
+                            Going to Notify {this.state.contactList.length} people
+                          </Text>) ||
+                          (<Text> Tap to configure SMS Functionality </Text>)}
+                      </CardItem>
                     </Card>
                     </View>
 

@@ -58,7 +58,10 @@ class AlarmNotify extends PureComponent {
             <Right>
               <Button transparent
                 disabled={!params.canSave}
-                onPress={ () => navigation.goBack()} >
+                onPress={ () => {
+                  params.saveFunc();
+                  navigation.goBack();
+                }} >
                   <Icon name="save"/>
               </Button>
             </Right>
@@ -98,6 +101,36 @@ class AlarmNotify extends PureComponent {
             lastIndex: this.state.lastIndex,
           }
         );
+  }
+
+  _writeBackToParent() {
+    const {navigation} = this.props;
+    const {chosenContacts, text, lastIndex} = this.state;
+
+    callback = navigation.getParam('mapComponentToProps', () => {});
+
+    callback(chosenContacts, text, lastIndex);
+  }
+
+  componentDidMount() {
+    const {navigation} = this.props;
+
+    // Restore (or rehydrate) state back
+    contactList = navigation.getParam('contactList', []);
+    message = navigation.getParam('message', '');
+    lastIndex = navigation.getParam('lastIndex', 0);
+    saveFunc = navigation.getParam('mapComponentToProps', () => {});
+    this.setState({
+        chosenContacts: contactList,
+        text: message,
+        lastIndex: lastIndex,
+    })
+
+    // Pass callback functions to Appbar component
+    navigation.setParams({
+      saveFunc: this._writeBackToParent.bind(this),
+      canSave: (contactList.length !== 0),
+    });
   }
 
   render() {
