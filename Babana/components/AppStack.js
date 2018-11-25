@@ -39,19 +39,7 @@ const routes = Object.keys(AppScreens)
 
     if (typeof Comp.navigationOptions === 'undefined')
       Screen.navigationOptions = (props) => ({
-        header: (
-          <Header>
-            <Left>
-              <Button transparent onPress={() => props.navigation.goBack()}>
-                <Icon name="arrow-back" />
-              </Button>
-            </Left>
-            <Body>
-              <Title>{id}</Title>
-            </Body>
-            <Right />
-          </Header>
-        )
+        header: null,
       });
     else
       Screen.navigationOptions = Comp.navigationOptions;
