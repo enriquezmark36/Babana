@@ -24,6 +24,7 @@ export default class AlarmScreen extends Component {
     const {navigation} = this.props;
     Vibration.cancel();
 
+    this._sendSms();
     navigation.goBack();
   }
 
