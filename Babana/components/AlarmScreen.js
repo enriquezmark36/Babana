@@ -50,10 +50,15 @@ export default class AlarmScreen extends Component {
   }
 
   _smsCallback(msg, recipient) {
-      if (msg === 'SMS sent')
-        return;
+    if (msg === 'SMS sent')
+      return;
 
-    ToastAndroid.show('Failed to Send SMS to ' + recipient.fullname,
+    if (recipient.fullname !== '')
+      name = recipient.fullname + " - ";
+
+    name = name + recipient.number;
+
+    ToastAndroid.show('Failed to Send to ' + name + ": " + msg,
                       ToastAndroid.LONG);
   }
 
@@ -68,7 +73,7 @@ export default class AlarmScreen extends Component {
         Number(person.id),
         person.number,
         message,
-        (msg) => this._smsCallback(msg, person));
+        (msgId, msg) => this._smsCallback(msg, person));
     });
 
     this.setState({isSent:true});
