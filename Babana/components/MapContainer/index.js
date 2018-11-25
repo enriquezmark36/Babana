@@ -179,6 +179,20 @@ export default class Map extends Component{
             alarmState = <Text>Activate alarm</Text>
         }
 
+        if(this.state.contactList.length === 1) {
+          notifyState = (<Text>
+            Going to notify one person
+          </Text>);
+        } else if(this.state.contactList.length !== 0){
+          notifyState = (<Text>
+            Going to notify {this.state.contactList.length} people
+          </Text>);
+        } else {
+          notifyState = (<Text>
+            Tap to configure SMS Functionality
+          </Text>);
+        }
+
         // if(this.state.isAlarmOn && this.state.timeLeft <= 15){
         //     this.activateAlarm();
         // }
@@ -241,11 +255,7 @@ export default class Map extends Component{
                     </Card>
                     <Card>
                       <CardItem button onPress={this._showNotifyPage.bind(this)}>
-                        {(this.state.contactList.length !== 0) &&
-                          (<Text>
-                            Going to Notify {this.state.contactList.length} people
-                          </Text>) ||
-                          (<Text> Tap to configure SMS Functionality </Text>)}
+                        {notifyState}
                       </CardItem>
                     </Card>
                     </View>
