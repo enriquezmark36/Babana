@@ -64,7 +64,14 @@ export default class Map extends Component{
                 isAlarmOn: false
             });
 
-            this.props.navigation.navigate("AlarmScreen");
+            this.props
+                .navigation
+                .navigate("AlarmScreen",
+                          {
+                            contactList: this.state.contactList,
+                            message: this.state.message,
+                          }
+                         );
         }
     }
 
