@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sms-x')
     compile project(':react-native-google-places')
     compile project(':react-native-contacts')
     compile project(':react-native-gesture-handler')

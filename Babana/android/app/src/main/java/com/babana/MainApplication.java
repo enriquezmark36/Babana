@@ -3,6 +3,7 @@ package com.babana;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.someone.sendsms.SendSMSPackage;
 import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SendSMSPackage(),
             new RNGooglePlacesPackage(),
             new ReactNativeContacts(),
             new RNGestureHandlerPackage(),
