@@ -14,6 +14,7 @@ export default class AlarmScreen extends Component {
         message: '',
       };
       this._sendSms = this._sendSms.bind(this);
+      this._smsCallback = this._smsCallback.bind(this);
   }
 
   //Disables the header bar
@@ -67,7 +68,7 @@ export default class AlarmScreen extends Component {
         Number(person.id),
         person.number,
         message,
-        (msg) => _smsCallback(msg, person));
+        (msg) => this._smsCallback(msg, person));
     });
 
     this.setState({isSent:true});
