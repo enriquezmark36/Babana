@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, Vibration, TouchableNativeFeedback} from 'react-native';
+import {Platform, StyleSheet, View, Vibration, TouchableNativeFeedback, ToastAndroid} from 'react-native';
 import {Container, Title, Header, Body, Button, Text} from 'native-base';
 import CountdownCircle from 'react-native-countdown-circle'
+import SendSMS from 'react-native-sms-x';
 
 export default class AlarmScreen extends Component {
   constructor(props){
@@ -47,17 +48,26 @@ export default class AlarmScreen extends Component {
       return;
   }
 
+  _smsCallback(msg, recipient) {
+      if (msg === 'SMS sent')
+        return;
+
+    ToastAndroid.show('Failed to Send SMS to ' + recipient.fullname,
+                      ToastAndroid.LONG);
+  }
+
   _sendSms() {
     const {contactList, message} = this.state;
 
-    console.log(this.state);
     if (this.state.isSent === true)
       return;
 
     contactList.forEach((person) => {
-      console.log(person.fullname);
-      console.log(person.number);
-      console.log("sent");
+      SendSMS.send(
+        Number(person.id),
+        person.number,
+        message,
+        (msg) => _smsCallback(msg, person));
     });
 
     this.setState({isSent:true});
