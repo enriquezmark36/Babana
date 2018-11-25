@@ -6,6 +6,7 @@ import App from '../components/App'
 import AlarmNotify from '../components/AlarmNotify'
 import ContactPicker from '../components/AlarmNotify/ContactPicker'
 import AlarmScreen from '../components/AlarmScreen';
+import MapContainer from '../components/MapContainer';
 
 const {
   Header,
@@ -27,6 +28,7 @@ const AppScreens = {
   AlarmNotify: AlarmNotify,
   ContactPicker: ContactPicker,
   AlarmScreen: AlarmScreen,
+  MapContainer: MapContainer,
 };
 
 const routes = Object.keys(AppScreens)
