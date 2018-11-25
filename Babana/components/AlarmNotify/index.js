@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import * as NativeBase from 'native-base';
-import ReactNative from 'react-native';
+import ReactNative, {PermissionsAndroid} from 'react-native';
 
 import Chip from './ChipArea';
 
@@ -89,11 +89,20 @@ class AlarmNotify extends PureComponent {
 
 
   _showContactPicker(push) {
-    const { contactList, lastIndex } = this.state;
-    const mapStateToParent = this._mapChildToState.bind(this);
+    PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_CONTACTS).then(
+        response => {
+            if(response === true){
+                const { contactList, lastIndex } = this.state;
+                const mapStateToParent = this._mapChildToState.bind(this);
 
-    push('ContactPicker',
-          {mapStateToParent, contactList, lastIndex});
+                push('ContactPicker',
+                      {mapStateToParent, contactList, lastIndex});
+            }else{
+                PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS)
+            }
+        }
+    )
+
   }
 
   _save() {

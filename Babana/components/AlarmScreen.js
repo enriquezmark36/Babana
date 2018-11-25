@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, Vibration, TouchableNativeFeedback, ToastAndroid} from 'react-native';
+import {Platform, StyleSheet, View, Vibration, TouchableNativeFeedback, ToastAndroid, PermissionsAndroid} from 'react-native';
 import {Container, Title, Header, Body, Button, Text} from 'native-base';
 import CountdownCircle from 'react-native-countdown-circle'
 import SendSMS from 'react-native-sms-x';
@@ -92,7 +92,7 @@ export default class AlarmScreen extends Component {
           >
             <View>
               <CountdownCircle
-                  seconds={8}
+                  seconds={5}
                   radius={32}
                   borderWidth={8}
                   color="#D500F9"

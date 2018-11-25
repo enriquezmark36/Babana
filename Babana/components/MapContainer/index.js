@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions, ScrollView} from 'react-native';
+import {Text, View, Dimensions, ScrollView, PermissionsAndroid} from 'react-native';
 import {Container, Content, Button, Header, Footer, FooterTab, Left, Body, Right, Title, Card, CardItem} from 'native-base';
 
 import MapView from 'react-native-maps';
@@ -91,6 +91,17 @@ export default class Map extends Component{
     }
 
     componentDidMount(){
+
+        //Check permissions
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(
+            response => {
+                if(response === false){
+                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+                }
+            }
+        )
+
+
         navigator.geolocation.getCurrentPosition((position) => {
             this.setState({mapPosition: {
                 latitude: position.coords.latitude,
@@ -166,6 +177,22 @@ export default class Map extends Component{
     // For Alarm Notify Page
     //
     _showNotifyPage() {
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.SEND_SMS).then(
+          response => {
+              if(response === false){
+                  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.SEND_SMS);
+              }
+          }
+        )
+
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE).then(
+            response => {
+                if(response === false){
+                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE);
+                }
+            }
+        )
+
       const {contactList, message, lastIndex} = this.state;
       const mapStateToParent = this._mapChildToState.bind(this);
 
@@ -251,7 +278,7 @@ export default class Map extends Component{
                     <View style={styles.footer}>
                     <ScrollView>
                     <Card>
-                        <CardItem>
+                        <CardItem button onPress = {this.openSearchModal.bind(this)}>
                             <Text>Time to Destination: {Math.ceil(this.state.timeLeft)} minutes</Text>
                         </CardItem>
                     </Card>
