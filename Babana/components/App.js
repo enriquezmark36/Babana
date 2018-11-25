@@ -25,12 +25,14 @@ export default class App extends Component<Props> {
   constructor(props){
       super(props);
 
+      // <Button onPress={() => this.props.navigation.navigate("AlarmScreen")}>
+      //   <Text>Run Alarm</Text>
+      // </Button>
   }
   render() {
       return (
-        <Button onPress={() => this.props.navigation.navigate("AlarmScreen")}>
-          <Text>Run Alarm</Text>
-        </Button>
+
+          <Map {...this.props}/>
       );
   }
 }

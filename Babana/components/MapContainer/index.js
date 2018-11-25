@@ -7,6 +7,8 @@ import RNGGooglePlaces from 'react-native-google-places';
 import MapViewDirections from 'react-native-maps-directions';
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+import AlarmScreen from '../AlarmScreen';
+
 import styles from "./MapContainerStyles.js";
 
 const{width, height} = Dimensions.get('window');
@@ -16,7 +18,6 @@ const SCREEN_WIDTH = width;
 const APECT_RATIO = width/height;
 const LATITUDE_DELTA = 0.022;
 const LONGITUDE_DELTA = LATITUDE_DELTA*APECT_RATIO;
-const apiKey = process.env.GOOGLE_API_KEY;
 
 export default class Map extends Component{
     constructor(props){
@@ -39,11 +40,30 @@ export default class Map extends Component{
             },
             distance: 0,
             timeLeft: 0,
-            isMapReady: false
+            isMapReady: false,
+            isAlarmOn: false
         }
     }
 
     watchID: ?number = null
+
+    toggleAlarm(){
+        let alarmState = !this.state.isAlarmOn;
+
+        this.setState({
+            isAlarmOn: alarmState
+        })
+    }
+
+    activateAlarm(){
+        if(this.state.isAlarmOn && this.state.timeLeft <= 15){
+            this.setState({
+                isAlarmOn: false
+            });
+
+            this.props.navigation.navigate("AlarmScreen");
+        }
+    }
 
     updateTimeandDistance(newDistance, newTime){
         this.setState({
@@ -62,14 +82,6 @@ export default class Map extends Component{
 
     componentDidMount(){
         navigator.geolocation.getCurrentPosition((position) => {
-            // const initialRegion={
-            //     latitude: parseFloat(position.coords.latitude),
-            //     longitude: parseFloat(position.coords.longitude),
-            //     latitudeDelta: LATITUDE_DELTA,
-            //     longitudeDelta: LONGITUDE_DELTA
-            // }
-
-
             this.setState({mapPosition: {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
@@ -89,36 +101,15 @@ export default class Map extends Component{
         {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
 
         this.watchID = navigator.geolocation.watchPosition((position) => {
-
-                // const lastRegion={
-                //     latitude: parseFloat(position.coords.latitude),
-                //     longitude: parseFloat(position.coords.longitude),
-                //     latitudeDelta: LATITUDE_DELTA,
-                //     longitudeDelta: LONGITUDE_DELTA
-                // }
-
                 this.setState({origin:{
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 }});
-            },
-            (error)=>alert(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: false})
-        //RNGGooglePlaces.openPlacePickerModal()
-        // .then((place)=>{this.setState({mapPosition:{
-        //     latitude: results[0].latitude,
-        //     longitude: results[0].longitude,
-        //     latitudeDelta: LATITUDE_DELTA,
-        //     longitudeDelta: LONGITUDE_DELTA
-        // }})
-        // this.setState({
-        //     markerPosition:{
-        //         latitude:results[0].latitude,
-        //         longitude:results[0].longitude
-        //     }
-        // })
-        // })
-        // .catch(error=>console.log(error.message))
+        },
+        (error)=>alert(JSON.stringify(error)),
+        {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: false})
+
+        this.interval = setInterval(() => this.activateAlarm(),1000);
     }
 
     openSearchModal(){
@@ -158,9 +149,20 @@ export default class Map extends Component{
 
     componentWillUnmount(){
         navigator.geolocation.clearWatch(this.watchID);
+        clearInterval(this.interval);
     }
 
     render() {
+        if(this.state.isAlarmOn){
+            alarmState = <Text>Deactivate alarm</Text>
+        }else{
+            alarmState = <Text>Activate alarm</Text>
+        }
+
+        // if(this.state.isAlarmOn && this.state.timeLeft <= 15){
+        //     this.activateAlarm();
+        // }
+
         return(
             <Container>
                     <Header>
@@ -206,10 +208,16 @@ export default class Map extends Component{
 
 
                     <View style={styles.footer}>
-                    <Card >
+                    <Card>
                         <CardItem>
-                            <Text>Time to Destination: {this.state.timeLeft}</Text>
+                            <Text>Time to Destination: {Math.ceil(this.state.timeLeft)} minutes</Text>
                         </CardItem>
+                    </Card>
+                    <Card>
+                        <CardItem button onPress = {this.toggleAlarm.bind(this)}>
+                            {alarmState}
+                        </CardItem>
+
                     </Card>
                     </View>
 

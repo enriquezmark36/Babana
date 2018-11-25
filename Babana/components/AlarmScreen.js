@@ -27,7 +27,7 @@ export default class AlarmScreen extends Component {
   render() {
       return (
         <Container style={styles.container}>
-         <Text> You have reached your destination </Text>
+         <Text> You are almost at your destination</Text>
          <Button style={styles.okButton}rounded light onPress={()=> this._OK()}>
             <Text>    OK    </Text>
          </Button>
