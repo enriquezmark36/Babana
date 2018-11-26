@@ -59,7 +59,7 @@ export default class Map extends Component{
     }
 
     activateAlarm(){
-        if(this.state.isAlarmOn && this.state.timeLeft <= 15){
+        if(this.state.isAlarmOn && this.state.timeLeft <= 3){
             this.setState({
                 isAlarmOn: false
             });
@@ -203,9 +203,9 @@ export default class Map extends Component{
 
     render() {
         if(this.state.isAlarmOn){
-            alarmState = <Text>Deactivate alarm</Text>
+            alarmState = <Text>Alarm will ring 3 mins. before arrival. Tap to deactivate alarm.</Text>
         }else{
-            alarmState = <Text>Activate alarm</Text>
+            alarmState = <Text>Tap to Activate alarm</Text>
         }
 
         if(this.state.contactList.length === 1) {
