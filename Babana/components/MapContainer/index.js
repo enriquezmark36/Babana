@@ -90,16 +90,11 @@ export default class Map extends Component{
         });
     }
 
+    UNSAFE_componentWillMount(){
+    }
+
     componentDidMount(){
 
-        //Check permissions
-        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(
-            response => {
-                if(response === false){
-                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-                }
-            }
-        )
 
 
         navigator.geolocation.getCurrentPosition((position) => {
@@ -118,7 +113,7 @@ export default class Map extends Component{
                 longitude: position.coords.longitude
             }});
         },
-        (error)=>alert(JSON.stringify(error)),
+        (error)=>alert(error=>console.log(error.message)),
         {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
 
         this.watchID = navigator.geolocation.watchPosition((position) => {
@@ -127,7 +122,7 @@ export default class Map extends Component{
                     longitude: position.coords.longitude
                 }});
         },
-        (error)=>alert(JSON.stringify(error)),
+        (error)=>alert(error=>console.log(error.message)),
         {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: false})
 
         this.interval = setInterval(() => this.activateAlarm(),1000);
@@ -227,76 +222,83 @@ export default class Map extends Component{
           </Text>);
         }
 
-        // if(this.state.isAlarmOn && this.state.timeLeft <= 15){
-        //     this.activateAlarm();
-        // }
+        map = (<Container>
+                <Header>
+                    <Left>
+                        <Button transparent onPress={this.openSearchModal.bind(this)}><Icon name="search" size={30}/></Button>
+                    </Left>
+                    <Body>
+                        <Title style= {{color: 'black'}}>Babana</Title>
+                    </Body>
+                    <Right>
+                        <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
+                    </Right>
+                </Header>
+                <MapView
+                    provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
+                    style = {styles.map}
+                    region = {this.state.mapPosition}
+                    showsUserLocation={true}
+                    showsMyLocationButton={true}
+                    showsCompass={true}
+                    followsUserLocation={true}
+                    loadingEnabled={true}
+                    toolbarEnabled={true}
+                    zoomEnabled={true}
+                    rotateEnabled={true}
+                    onLayout = {this.onMapLayout.bind(this)}
+                >
+                <MapView.Marker coordinate={this.state.markerPosition} />
+
+                <MapViewDirections
+                    origin = {this.state.origin}
+                    destination = {this.state.markerPosition}
+                    apikey = {"AIzaSyB6-GKz6npAKsFVebEeoc16ALXzuYrSWpE"}
+                    strokeWidth={3}
+                    strokeColor="orange"
+
+                    onReady={(result) => {
+                        this.updateTimeandDistance(result.distance, result.duration);
+                    }}
+                />
+
+                </MapView>
+
+
+                <View style={styles.footer}>
+                <ScrollView>
+                <Card>
+                    <CardItem button onPress = {this.openSearchModal.bind(this)}>
+                        <Text>Time to Destination: {Math.ceil(this.state.timeLeft)} minutes</Text>
+                    </CardItem>
+                </Card>
+                <Card>
+                    <CardItem button onPress = {this.toggleAlarm.bind(this)}>
+                        {alarmState}
+                    </CardItem>
+
+                </Card>
+                <Card>
+                  <CardItem button onPress={this._showNotifyPage.bind(this)}>
+                    {notifyState}
+                  </CardItem>
+                </Card>
+                </ScrollView>
+                </View>
+
+        </Container>);
+
+        //Check permissions
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(
+            response => {
+                if(response === false){
+                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+                }
+            }
+        )
 
         return(
-            <Container>
-                    <Header>
-                        <Left>
-                            <Button transparent onPress={this.openSearchModal.bind(this)}><Icon name="search" size={30}/></Button>
-                        </Left>
-                        <Body>
-                            <Title style= {{color: 'black'}}>Babana</Title>
-                        </Body>
-                        <Right>
-                            <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
-                        </Right>
-                    </Header>
-                    <MapView
-                        provider={MapView.PROVIDER_GOOGLE}//Tells mapview what kind of map
-                        style = {styles.map}
-                        region = {this.state.mapPosition}
-                        showsUserLocation={true}
-                        showsMyLocationButton={true}
-                        showsCompass={true}
-                        followsUserLocation={true}
-                        loadingEnabled={true}
-                        toolbarEnabled={true}
-                        zoomEnabled={true}
-                        rotateEnabled={true}
-                        onLayout = {this.onMapLayout.bind(this)}
-                    >
-                    <MapView.Marker coordinate={this.state.markerPosition} />
-
-                    <MapViewDirections
-                        origin = {this.state.origin}
-                        destination = {this.state.markerPosition}
-                        apikey = {"AIzaSyB6-GKz6npAKsFVebEeoc16ALXzuYrSWpE"}
-                        strokeWidth={3}
-                        strokeColor="orange"
-
-                        onReady={(result) => {
-                            this.updateTimeandDistance(result.distance, result.duration);
-                        }}
-                    />
-
-                    </MapView>
-
-
-                    <View style={styles.footer}>
-                    <ScrollView>
-                    <Card>
-                        <CardItem button onPress = {this.openSearchModal.bind(this)}>
-                            <Text>Time to Destination: {Math.ceil(this.state.timeLeft)} minutes</Text>
-                        </CardItem>
-                    </Card>
-                    <Card>
-                        <CardItem button onPress = {this.toggleAlarm.bind(this)}>
-                            {alarmState}
-                        </CardItem>
-
-                    </Card>
-                    <Card>
-                      <CardItem button onPress={this._showNotifyPage.bind(this)}>
-                        {notifyState}
-                      </CardItem>
-                    </Card>
-                    </ScrollView>
-                    </View>
-
-            </Container>
+            map
         );
     }
 }
