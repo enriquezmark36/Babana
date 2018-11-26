@@ -18,6 +18,17 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+    subprojects {
+        afterEvaluate {project ->
+        // force libs to use recent buildtools
+            if (project.hasProperty("android")) {
+                android {
+                    compileSdkVersion = 27  // change to match your desired version
+                    buildToolsVersion = "27.0.3" // ....
+                }
+            }
+        }
+    }
 }
 
 allprojects {
