@@ -94,7 +94,7 @@ export default class Map extends Component{
     }
 
     componentDidMount(){
-
+        this.interval = setInterval(() => this.activateAlarm(),1000);
         //Check permissions
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(
             response => {
@@ -128,8 +128,6 @@ export default class Map extends Component{
                     },
                     (error)=>alert(error.message),
                     {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: false})
-
-                    this.interval = setInterval(() => this.activateAlarm(),1000);
                 }
             }
         )
