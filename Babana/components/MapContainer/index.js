@@ -95,37 +95,44 @@ export default class Map extends Component{
 
     componentDidMount(){
 
+        //Check permissions
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(
+            response => {
+                if(response === false){
+                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+                }else{
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        this.setState({mapPosition: {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            latitudeDelta: LATITUDE_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA
+                        }});
+                        this.setState({markerPosition: {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        }});
+                        this.setState({origin:{
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        }});
+                    },
+                    (error)=>alert(error=>console.log(error.message)),
+                    {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
 
+                    this.watchID = navigator.geolocation.watchPosition((position) => {
+                            this.setState({origin:{
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude
+                            }});
+                    },
+                    (error)=>alert(error=>console.log(error.message)),
+                    {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: false})
 
-        navigator.geolocation.getCurrentPosition((position) => {
-            this.setState({mapPosition: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA
-            }});
-            this.setState({markerPosition: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-            }});
-            this.setState({origin:{
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-            }});
-        },
-        (error)=>alert(error=>console.log(error.message)),
-        {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
-
-        this.watchID = navigator.geolocation.watchPosition((position) => {
-                this.setState({origin:{
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                }});
-        },
-        (error)=>alert(error=>console.log(error.message)),
-        {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: false})
-
-        this.interval = setInterval(() => this.activateAlarm(),1000);
+                    this.interval = setInterval(() => this.activateAlarm(),1000);
+                }
+            }
+        )
     }
 
     openSearchModal(){
@@ -288,14 +295,7 @@ export default class Map extends Component{
 
         </Container>);
 
-        //Check permissions
-        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(
-            response => {
-                if(response === false){
-                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-                }
-            }
-        )
+
 
         return(
             map
