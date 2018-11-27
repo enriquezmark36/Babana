@@ -19,12 +19,12 @@ buildscript {
         // in the individual module build.gradle files
     }
     subprojects {
-        afterEvaluate {project ->
-        // force libs to use recent buildtools
-            if (project.hasProperty("android")) {
-                android {
-                    compileSdkVersion = 27  // change to match your desired version
-                    buildToolsVersion = "27.0.3" // ....
+        afterEvaluate { project ->
+        //force libs to use recent build tools
+            if(project.hasProperty("android")){
+                android{
+                    compileSdkVersion = 27
+                    buildToolsVersion = "27.0.3"
                 }
             }
         }
