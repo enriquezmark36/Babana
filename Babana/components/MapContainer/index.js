@@ -71,7 +71,7 @@ export default class Map extends Component{
                             contactList: this.state.contactList,
                             message: this.state.message,
                           }
-                         );
+                );
         }
     }
 
@@ -126,7 +126,7 @@ export default class Map extends Component{
                                 longitude: position.coords.longitude
                             }});
                     },
-                    (error)=>alert(error=>console.log(error.message)),
+                    (error)=>alert(error.message),
                     {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000, distanceFilter: 10, useSignificantChanges: false})
 
                     this.interval = setInterval(() => this.activateAlarm(),1000);
