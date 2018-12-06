@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions, ScrollView, PermissionsAndroid} from 'react-native';
+import {Text, View, Dimensions, ScrollView, PermissionsAndroid, Input, TextInput} from 'react-native';
 import {Container, Content, Button, Header, Footer, FooterTab, Left, Body, Right, Title, Card, CardItem} from 'native-base';
 
 import MapView from 'react-native-maps';
@@ -45,6 +45,7 @@ export default class Map extends Component{
             contactList: [],
             message: '',
             lastIndex: 0,
+            alarmTime: 3,
         }
     }
 
@@ -58,8 +59,14 @@ export default class Map extends Component{
         })
     }
 
+    setAlarmTime(time){
+        this.setState({
+            alarmTime: text
+        })
+    }
+
     activateAlarm(){
-        if(this.state.isAlarmOn && this.state.timeLeft <= 3){
+        if(this.state.isAlarmOn && this.state.timeLeft <= this.state.alarmTime){
             this.setState({
                 isAlarmOn: false
             });
@@ -208,9 +215,9 @@ export default class Map extends Component{
 
     render() {
         if(this.state.isAlarmOn){
-            alarmState = <Text>Alarm will ring 3 mins. before arrival. Tap to deactivate alarm.</Text>
+            alarmState = <Text>Tap this to deactivate alarm.</Text>
         }else{
-            alarmState = <Text>Tap to Activate alarm</Text>
+            alarmState = <Text>Tap this to Activate alarm</Text>
         }
 
         if(this.state.contactList.length === 1) {
@@ -272,22 +279,28 @@ export default class Map extends Component{
 
                 <View style={styles.footer}>
                 <ScrollView>
-                <Card>
-                    <CardItem button onPress = {this.openSearchModal.bind(this)}>
-                        <Text>Time to Destination: {Math.ceil(this.state.timeLeft)} minutes</Text>
-                    </CardItem>
-                </Card>
-                <Card>
-                    <CardItem button onPress = {this.toggleAlarm.bind(this)}>
-                        {alarmState}
-                    </CardItem>
-
-                </Card>
-                <Card>
-                  <CardItem button onPress={this._showNotifyPage.bind(this)}>
-                    {notifyState}
-                  </CardItem>
-                </Card>
+                    <Card>
+                        <CardItem button onPress = {this.openSearchModal.bind(this)}>
+                            <Text>Time to Destination: {Math.ceil(this.state.timeLeft)} minutes</Text>
+                        </CardItem>
+                    </Card>
+                    <Card>
+                        <Text>Alarm will ring {this.state.alarmTime} mins. before arrival.</Text>
+                        <TextInput
+                            style={{height: 40, borderColor: 'gray',borderWidth: 1}}
+                            onChangeText={(text) => this.setState({alarmTime: text})}
+                            keyboardType='numeric'
+                            placeholder="Enter no. of minutes to notify before arrival here"
+                        />
+                        <CardItem button onPress = {this.toggleAlarm.bind(this)}>
+                            {alarmState}
+                        </CardItem>
+                    </Card>
+                    <Card>
+                      <CardItem button onPress={this._showNotifyPage.bind(this)}>
+                        {notifyState}
+                      </CardItem>
+                    </Card>
                 </ScrollView>
                 </View>
 
