@@ -1,0 +1,18 @@
+
+{
+  "name": "react-native-babana-ringtone",
+  "version": "0.0.1",
+  "description": "babana project's native module for ringtone access",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": "Mark Enriquez",
+  "license": "MIT",
+  "peerDependencies": {
+    "react-native": "^0.57.5"
+  }
+}

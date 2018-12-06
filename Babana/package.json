@@ -10,6 +10,7 @@
     "native-base": "^2.8.1",
     "react": "16.6.1",
     "react-native": "0.57.5",
+    "react-native-babana-ringtone": "file:babana-ringtone/",
     "react-native-contacts": "^2.2.4",
     "react-native-countdown-circle": "^3.0.0",
     "react-native-gesture-handler": "^1.0.9",

@@ -3,6 +3,7 @@ import {Platform, StyleSheet, View, Vibration, TouchableNativeFeedback, ToastAnd
 import {Container, Title, Header, Body, Button, Text} from 'native-base';
 import CountdownCircle from 'react-native-countdown-circle'
 import SendSMS from 'react-native-sms-x';
+import BabanaRingtone from 'react-native-babana-ringtone';
 
 export default class AlarmScreen extends Component {
   constructor(props){
@@ -25,6 +26,9 @@ export default class AlarmScreen extends Component {
     Vibration.cancel();
 
     this._sendSms();
+
+    BabanaRingtone.stopRingtone();
+
     navigation.goBack();
   }
 
@@ -38,6 +42,10 @@ export default class AlarmScreen extends Component {
     //map navigation params to state
     contactList = navigation.getParam('contactList', []);
     message = navigation.getParam('message', '');
+
+    // Set the default Ringtone
+    BabanaRingtone.loadDefaultRingtone();
+    BabanaRingtone.playRingtone()
 
     this.setState({contactList, message});
   }
