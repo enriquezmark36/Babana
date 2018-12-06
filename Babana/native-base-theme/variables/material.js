@@ -87,7 +87,7 @@ export default {
   },
 
   // Card
-  cardDefaultBg: "rgba(238,255,255,1)",
+  cardDefaultBg: "rgba(253,255,255,1)",
   cardBorderColor: "#ccc",
   cardBorderRadius: 2,
   cardItemPadding: platform === "ios" ? 10 : 12,

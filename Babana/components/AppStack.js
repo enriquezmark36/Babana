@@ -7,6 +7,7 @@ import AlarmNotify from '../components/AlarmNotify'
 import ContactPicker from '../components/AlarmNotify/ContactPicker'
 import AlarmScreen from '../components/AlarmScreen';
 import MapContainer from '../components/MapContainer';
+import About from '../components/About';
 
 const {
   Header,
