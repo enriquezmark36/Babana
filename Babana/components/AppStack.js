@@ -65,7 +65,7 @@ function disableHeaderIfUndef(Comp) {
 
 const AppStack = createStackNavigator(
   {
-    App: { screen: disableHeaderIfUndef(App)},
+    Home: { screen: disableHeaderIfUndef(App)},
     ...routes,
   },
 )
