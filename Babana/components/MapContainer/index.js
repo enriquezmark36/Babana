@@ -19,6 +19,8 @@ const APECT_RATIO = width/height;
 const LATITUDE_DELTA = 0.022;
 const LONGITUDE_DELTA = LATITUDE_DELTA*APECT_RATIO;
 
+import { GOOGLE_MAPS_APIKEY } from 'react-native-dotenv';
+
 export default class Map extends Component{
     constructor(props){
         super(props)
@@ -124,7 +126,7 @@ export default class Map extends Component{
                             longitude: position.coords.longitude
                         }});
                     },
-                    (error)=>alert(error=>console.log(error.message)),
+                    (error)=>console.log(error.message),
                     {enableHighAccuracy: true, timeout: 60000, maximumAge: 1000})
 
                     this.watchID = navigator.geolocation.watchPosition((position) => {
@@ -265,7 +267,7 @@ export default class Map extends Component{
                 <MapViewDirections
                     origin = {this.state.origin}
                     destination = {this.state.markerPosition}
-                    apikey = {"AIzaSyB6-GKz6npAKsFVebEeoc16ALXzuYrSWpE"}
+                    apikey = {GOOGLE_MAPS_APIKEY}
                     strokeWidth={3}
                     strokeColor="orange"
 
