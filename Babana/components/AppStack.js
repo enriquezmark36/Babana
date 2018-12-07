@@ -26,6 +26,7 @@ const {
 //   Settings: Settings
 // };
 const AppScreens = {
+  About: About,
   AlarmNotify: AlarmNotify,
   ContactPicker: ContactPicker,
   AlarmScreen: AlarmScreen,

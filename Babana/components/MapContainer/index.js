@@ -246,6 +246,7 @@ export default class Map extends Component{
                     </Body>
                     <Right>
                         <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
+                        <Button transparent onPress={()=>this.props.navigation.navigate("About")}><Text>About</Text></Button>
                     </Right>
                 </Header>
                 <MapView
