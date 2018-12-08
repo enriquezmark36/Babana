@@ -1,9 +1,13 @@
 import React, {PureComponent} from 'react';
-import { View, StyleSheet, ScrollView, SectionList } from 'react-native';
+import * as ReactNative from 'react-native';
 import * as NativeBase from "native-base";
 import BabanaRingtone from 'react-native-babana-ringtone';
 
 import CommonStyles from "./styles";
+
+const {
+  AsyncStorage,
+} = ReactNative;
 
 const {
   ListItem,
@@ -21,13 +25,9 @@ export default class ringtone extends PureComponent {
     super(props);
     this.state = {
       RingtoneURI: "",
-      RingtoneName: "Default",
+      RingtoneName: "Default Ringtone",
     };
     this._pickRingtone = this._pickRingtone.bind(this);
-  }
-
-  componentWillMount() {
-
   }
 
   async _pickRingtone(){
@@ -36,10 +36,54 @@ export default class ringtone extends PureComponent {
         .catch((errcode, errmsg) => {
           console.log(errcode, errmsg);
     });
+
+    // Would this cause a double error message?
     BabanaRingtone.getLoadedRingtone(
-      (errcode, errmsg) => console.log(errcode, errmsg),
-      (title, uri) => this.setState({RingtoneURI: uri,RingtoneName: title})
+      (errcode, errmsg) => {},
+      (title, uri) => {
+        this.setState({RingtoneURI: uri, RingtoneName: title})
+        AsyncStorage.setItem('RingtoneUri', uri)
+          .catch ((error) =>{console.log(error)});
+      }
     );
+
+  }
+
+  componentWillMount() {
+    AsyncStorage.getItem('RingtoneUri')
+      .then((value) => {
+        if(value) { // Success, key matched
+          BabanaRingtone
+              .loadRingtone(value)
+              .then(() =>{
+                BabanaRingtone.getLoadedRingtone(
+                  (errcode, errmsg) => {/* can only fail if invalid */},
+                  (title, uri) => {
+                    this.setState({RingtoneURI: uri, RingtoneName: title})
+                  }
+                );
+              }).catch((error) => {
+                console.log(error, "1")
+              });
+        } else { // Still Success, but key didn't matched
+          BabanaRingtone
+              .loadDefaultRingtone()
+              .then(() => {
+                BabanaRingtone.getLoadedRingtone(
+                  (errcode, errmsg) => {
+                    /* I dunno how this code path would be reached */
+                    console.log(errmsg+ '(\'' + errcode + '\')')
+                  },
+                  (title, uri) => {
+                    this.setState({RingtoneURI: uri, RingtoneName: title})
+                  }
+                );
+              }).catch((error) =>{
+                console.log(error)
+              });
+        }
+      })
+      .catch ((error) =>{console.log(error)});
   }
 
   render() {
