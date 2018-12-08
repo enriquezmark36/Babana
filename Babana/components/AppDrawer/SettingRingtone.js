@@ -25,7 +25,7 @@ export default class ringtone extends PureComponent {
     super(props);
     this.state = {
       RingtoneURI: "",
-      RingtoneName: "Default Ringtone",
+      RingtoneName: "Default ringtone",
     };
     this._pickRingtone = this._pickRingtone.bind(this);
   }
@@ -97,12 +97,11 @@ export default class ringtone extends PureComponent {
         >
           <Left>
             <Icon
-              size={16}
               name="bell"
               type="MaterialCommunityIcons"
             />
           </Left>
-          <Body>
+          <Body style={{height: null}}>
             <Text>Ringtone</Text>
             <Text note>{this.state.RingtoneName}</Text>
           </Body>

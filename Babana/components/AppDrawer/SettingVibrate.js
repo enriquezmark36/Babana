@@ -15,10 +15,8 @@ const {
 } = NativeBase;
 
 const {
-  View,
+  AsyncStorage,
   StyleSheet,
-  ScrollView,
-  SectionList,
   Switch
 } = ReactNative;
 
@@ -31,14 +29,22 @@ export default class ringtone extends PureComponent {
   }
 
   componentWillMount() {
+    AsyncStorage.getItem('wouldVibrate')
+      .then((value) => {
+        if (value) {
+          this.setState({wouldVibrate: value});
+        }
+      })
+      .catch((err) => {console.log(err)})
+    ;
   }
 
   _toggleVibrate() {
-    this.setState(function(state, props) {
-      return {
-        wouldVibrate: !state.wouldVibrate
-      };
-    });
+    wouldVibrate = !this.state.wouldVibrate
+    this.setState({wouldVibrate});
+
+    AsyncStorage.setItem('wouldVibrate', wouldVibrate)
+      .catch((err) => {console.log(err)});
   }
 
   render() {
