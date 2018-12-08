@@ -17,7 +17,8 @@ const {
 const {
   AsyncStorage,
   StyleSheet,
-  Switch
+  Switch,
+  View
 } = ReactNative;
 
 export default class ringtone extends PureComponent {
@@ -49,11 +50,12 @@ export default class ringtone extends PureComponent {
 
   render() {
     return (
-      <Content
+      <View
         style={CommonStyles.settingsItem}
       >
         <ListItem icon button noBorder
           onPress={this._toggleVibrate.bind(this)}
+          style={CommonStyles.item}
         >
           <Left>
             <Icon name="vibrate" type="MaterialCommunityIcons" />
@@ -72,7 +74,7 @@ export default class ringtone extends PureComponent {
             />
           </Right>
         </ListItem>
-      </Content>
+      </View>
     );
   }
 }

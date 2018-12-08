@@ -7,6 +7,7 @@ import CommonStyles from "./styles";
 
 const {
   AsyncStorage,
+  View,
 } = ReactNative;
 
 const {
@@ -88,12 +89,13 @@ export default class ringtone extends PureComponent {
 
   render() {
     return (
-      <Content
+      <View
         style={CommonStyles.settingsItem}
       >
         <ListItem
           icon button noBorder
           onPress={this._pickRingtone}
+          style={CommonStyles.item}
         >
           <Left>
             <Icon
@@ -102,12 +104,11 @@ export default class ringtone extends PureComponent {
             />
           </Left>
           <Body style={{height: null}}>
-            <Text>Ringtone</Text>
-            <Text note>{this.state.RingtoneName}</Text>
+            <Text>{this.state.RingtoneName}</Text>
           </Body>
           <Right/>
         </ListItem>
-      </Content>
+      </View>
     );
   }
 }
