@@ -33,7 +33,7 @@ export default class ringtone extends PureComponent {
     AsyncStorage.getItem('wouldVibrate')
       .then((value) => {
         if (value) {
-          this.setState({wouldVibrate: value});
+          this.setState({wouldVibrate: value === '0' ? false : true});
         }
       })
       .catch((err) => {console.log(err)})
@@ -44,7 +44,7 @@ export default class ringtone extends PureComponent {
     wouldVibrate = !this.state.wouldVibrate
     this.setState({wouldVibrate});
 
-    AsyncStorage.setItem('wouldVibrate', wouldVibrate)
+    AsyncStorage.setItem('wouldVibrate', (wouldVibrate === false ? '0' : '1'))
       .catch((err) => {console.log(err)});
   }
 

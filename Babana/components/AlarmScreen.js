@@ -1,9 +1,18 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, Vibration, TouchableNativeFeedback, ToastAndroid, PermissionsAndroid} from 'react-native';
+import * as ReactNative from 'react-native';
 import {Container, Title, Header, Body, Button, Text} from 'native-base';
 import CountdownCircle from 'react-native-countdown-circle'
 import SendSMS from 'react-native-sms-x';
 import BabanaRingtone from 'react-native-babana-ringtone';
+
+const {
+  StyleSheet,
+  View,
+  Vibration,
+  TouchableNativeFeedback,
+  ToastAndroid,
+  AsyncStorage,
+} = ReactNative ;
 
 export default class AlarmScreen extends Component {
   constructor(props){
@@ -36,9 +45,8 @@ export default class AlarmScreen extends Component {
   componentDidMount(){
     const {navigation} = this.props;
 
-    //enable vibration
+    //vibration pattern, 400ms vibrate, 400ms sleep ...
     const PATTERN = [400, 400];
-    Vibration.vibrate(PATTERN, true);
 
     //map navigation params to state
     contactList = navigation.getParam('contactList', []);
@@ -53,6 +61,27 @@ export default class AlarmScreen extends Component {
           BabanaRingtone.playRingtone()
             .catch ((error) =>{console.log(error)});
         });
+
+    // Aparently, there's only one case we won't
+    // Activate vibration:
+    //     it succeeds getting a key that has a value of '0'
+    AsyncStorage.getItem('wouldVibrate')
+      .then((value) => {
+        if (value) {
+          // Merging this above would complicate things
+          if (value === '1')
+            Vibration.vibrate(PATTERN, true);
+        } else {
+          // Even so the value is not present, we enable vibration
+          Vibration.vibrate(PATTERN, true);
+        }
+      })
+      .catch((err) => {
+        //Even if the query failed, we still enable vibration
+        console.log(err)
+        Vibration.vibrate(PATTERN, true);
+      })
+    ;
 
     this.setState({contactList, message});
   }
