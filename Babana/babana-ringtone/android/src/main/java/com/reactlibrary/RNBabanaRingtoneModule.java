@@ -13,6 +13,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.media.RingtoneManager;
 import android.media.Ringtone;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.content.Intent;
@@ -66,6 +67,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
     }
     mCurrentRingtone = RingtoneManager.getRingtone(getCurrentActivity(), uri);
     mLoadedURI = uri;
+    mCurrentRingtone.setStreamType(AudioManager.STREAM_ALARM);
   }
 
   public RNBabanaRingtoneModule(ReactApplicationContext reactContext) {
@@ -101,7 +103,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
     try {
       final Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
       intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, PICKER_PROMPT);
-      intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+      intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
       intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
       intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
       currentActivity.startActivityForResult(intent, PICK_RINGTONE_REQUEST);
