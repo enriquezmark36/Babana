@@ -32,6 +32,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
   private static final String E_SHOW_PICKER_FAILED = "E_SHOW_PICKER_FAILED";
   private static final String E_ACTIVITY_DNE = "E_ACTIVITY_DNE";
   private static final String E_NULL = "E_NULL";
+  private static final String E_INVAL = "E_INVAL";
 
   // Message to show during Ringtone Selection
   private static final String PICKER_PROMPT = "Select your alarm tone";
@@ -121,7 +122,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void loadRingtoneURI(String uri, final Promise promise) {
+  public void loadRingtone(String uri, final Promise promise) {
     if (uri == null) {
       promise.reject(E_NULL, "Ringtone URI is null");
       return;
@@ -132,7 +133,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
     // We check, if the URI is valid, that is, upon loading,
     // mCurrentRingtone is not null
     if (mCurrentRingtone == null) {
-      promise.reject(E_NULL, "Ringtone URI is invalid");
+      promise.reject(E_INVAL, "Ringtone URI is invalid");
     }
 
     promise.resolve(null);
