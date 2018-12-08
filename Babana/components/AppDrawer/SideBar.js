@@ -77,7 +77,7 @@ class SideBar extends PureComponent {
   render() {
     return (
       <Container>
-        <Content>
+        <Content style={{marginTop:8}}>
           <SectionList
             renderItem={() => {return null}}
             sections={this.state.sections}

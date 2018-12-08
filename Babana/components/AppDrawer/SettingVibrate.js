@@ -2,6 +2,8 @@ import React, {PureComponent} from 'react';
 import * as ReactNative from 'react-native';
 import * as NativeBase from "native-base";
 
+import CommonStyles from "./styles";
+
 const {
   ListItem,
   Text,
@@ -9,7 +11,7 @@ const {
   Body,
   Right,
   Content,
-  Switch // AFAIK, this only wraps the theme from RN
+  Icon,
 } = NativeBase;
 
 const {
@@ -17,6 +19,7 @@ const {
   StyleSheet,
   ScrollView,
   SectionList,
+  Switch
 } = ReactNative;
 
 export default class ringtone extends PureComponent {
@@ -40,22 +43,30 @@ export default class ringtone extends PureComponent {
 
   render() {
     return (
-      <ListItem button noBorder
-        onPress={this._toggleVibrate.bind(this)}
+      <Content
+        style={CommonStyles.settingsItem}
       >
+        <ListItem icon button noBorder
+          onPress={this._toggleVibrate.bind(this)}
+        >
           <Left>
-            <Text>Vibrate</Text>
+            <Icon name="vibrate" type="MaterialCommunityIcons" />
           </Left>
 
-          <Body/>
+          <Body>
+            <Text>Vibrate</Text>
+          </Body>
 
           <Right>
             <Switch
               value={this.state.wouldVibrate}
+              trackColor={{true: "#9e00c5", false: "#767676"}}
+              thumbColor={"#ff5bff"}
               onValueChange={this._toggleVibrate.bind(this)}
             />
           </Right>
-      </ListItem>
+        </ListItem>
+      </Content>
     );
   }
 }
