@@ -27,7 +27,8 @@ export default class AlarmScreen extends Component {
 
     this._sendSms();
 
-    BabanaRingtone.stopRingtone();
+    BabanaRingtone.stopRingtone()
+      .catch ((error) =>{console.log(error)});
 
     navigation.goBack();
   }
@@ -43,9 +44,15 @@ export default class AlarmScreen extends Component {
     contactList = navigation.getParam('contactList', []);
     message = navigation.getParam('message', '');
 
-    // Set the default Ringtone
-    BabanaRingtone.loadDefaultRingtone();
+    // Set play the Ringtone
+    // Or try loading it first then play if it fails
     BabanaRingtone.playRingtone()
+        .catch ((error) =>{
+          // Load Default ringtone then it still fails then log
+          BabanaRingtone.loadDefaultRingtone();
+          BabanaRingtone.playRingtone()
+            .catch ((error) =>{console.log(error)});
+        });
 
     this.setState({contactList, message});
   }
