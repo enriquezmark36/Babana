@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
 
@@ -21,6 +22,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
   private Ringtone mCurrentRingtone = null;
+  private Uri mLoadedURI = null;
 
   // Activity Request Codes
   private static final int PICK_RINGTONE_REQUEST = 1;
@@ -62,6 +64,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
       mCurrentRingtone.stop();
     }
     mCurrentRingtone = RingtoneManager.getRingtone(getCurrentActivity(), uri);
+    mLoadedURI = uri;
   }
 
   public RNBabanaRingtoneModule(ReactApplicationContext reactContext) {
@@ -115,6 +118,36 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
         .getActualDefaultRingtoneUri(getCurrentActivity().getApplicationContext(),
                                      RingtoneManager.TYPE_RINGTONE);
     setCurrentRingtone(defaultRingtoneUri);
+  }
+
+  @ReactMethod
+  public void loadRingtoneURI(String uri, final Promise promise) {
+    if (uri == null) {
+      promise.reject(E_NULL, "Ringtone URI is null");
+      return;
+    }
+
+    setCurrentRingtone(Uri.parse(uri));
+
+    // We check, if the URI is valid, that is, upon loading,
+    // mCurrentRingtone is not null
+    if (mCurrentRingtone == null) {
+      promise.reject(E_NULL, "Ringtone URI is invalid");
+    }
+
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void getLoadedRingtone(Callback errorCallback, Callback successCallback) {
+    if (mCurrentRingtone == null) {
+      errorCallback.invoke(E_NULL, "Ringtone not yet loaded");
+      return;
+    }
+
+    successCallback.invoke(
+        mCurrentRingtone.getTitle(getCurrentActivity().getApplicationContext()),
+        mLoadedURI.toString());
   }
 
   @ReactMethod
