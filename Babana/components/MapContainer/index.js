@@ -239,14 +239,16 @@ export default class Map extends Component{
         map = (<Container>
                 <Header>
                     <Left>
-                        <Button transparent onPress={this.openSearchModal.bind(this)}><Icon name="search" size={30}/></Button>
+                        <Button transparent onPress={()=>this.props.navigation.toggleDrawer()}>
+                          <Icon size={30} name='menu' />
+                        </Button>
                     </Left>
                     <Body>
                         <Title style= {{color: 'black'}}>Babana</Title>
                     </Body>
                     <Right>
                         <Button warning onPress={this.findMe.bind(this)}><Text>Find Me</Text></Button>
-                        <Button transparent onPress={()=>this.props.navigation.navigate("About")}><Text>About</Text></Button>
+                        <Button transparent onPress={this.openSearchModal.bind(this)}><Icon name="search" size={30}/></Button>
                     </Right>
                 </Header>
                 <MapView
