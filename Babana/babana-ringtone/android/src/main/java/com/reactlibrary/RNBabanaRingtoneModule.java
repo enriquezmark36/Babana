@@ -12,9 +12,10 @@ import com.facebook.react.bridge.BaseActivityEventListener;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.media.RingtoneManager;
-import android.media.Ringtone;
+import android.media.MediaPlayer;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.util.Log;
 import android.provider.MediaStore;
 import android.content.Intent;
 import android.app.Activity;
@@ -22,8 +23,11 @@ import android.app.Activity;
 public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
-  private Ringtone mCurrentRingtone = null;
+  private MediaPlayer mCurrentRingtone = null;
   private Uri mLoadedURI = null;
+
+  // Android Log tag
+  private static final String ALOG_TAG = "babana-ringtone";
 
   // Activity Request Codes
   private static final int PICK_RINGTONE_REQUEST = 1;
@@ -62,18 +66,29 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
   };
 
   private void setCurrentRingtone(Uri uri) {
-    if (mCurrentRingtone != null && mCurrentRingtone.isPlaying() == true) {
+    if (mCurrentRingtone != null) {
       mCurrentRingtone.stop();
+      mCurrentRingtone.reset();
     }
-    mCurrentRingtone = RingtoneManager.getRingtone(getCurrentActivity(), uri);
+
     mLoadedURI = uri;
-    mCurrentRingtone.setStreamType(AudioManager.STREAM_ALARM);
+    try {
+      mCurrentRingtone.setDataSource(getCurrentActivity(), uri);
+      mCurrentRingtone.setAudioStreamType(AudioManager.STREAM_ALARM);
+      mCurrentRingtone.setLooping(true);
+      mCurrentRingtone.prepare();
+    } catch (Exception e) {
+      Log.e(ALOG_TAG, "Ringtone loading failed", e);
+    }
+
   }
 
   public RNBabanaRingtoneModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
     reactContext.addActivityEventListener(mPickerListener);
+    this.mCurrentRingtone = new MediaPlayer();
+
   }
 
 //   No constants, yet
@@ -148,8 +163,12 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
       return;
     }
 
+    // Calling getRingtone() is kinda an overkill for this
+    // purpose but it helps to not re-implement some untested voo-doo
+    // that might break in the most unexpected ways.
     successCallback.invoke(
-        mCurrentRingtone.getTitle(getCurrentActivity().getApplicationContext()),
+        RingtoneManager.getRingtone(getCurrentActivity(), mLoadedURI)
+              .getTitle(getCurrentActivity().getApplicationContext()),
         mLoadedURI.toString());
   }
 
@@ -159,7 +178,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
       promise.reject(E_NULL, "Ringtone not yet loaded");
       return;
     }
-    mCurrentRingtone.play();
+    mCurrentRingtone.start();
   }
 
   @ReactMethod
