@@ -26,7 +26,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
   private MediaPlayer mCurrentRingtone = null;
   private Uri mLoadedURI = null;
-  private Boolean mRingtoneInvalid;
+  private Boolean mRingtoneInvalid = true;
 
   // Android Log tag
   private static final String ALOG_TAG = "babana-ringtone";
@@ -130,6 +130,11 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
 
     try {
       final Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+
+      //Check if it is possible to plug in the loaded URI
+      if (mLoadedURI != null && mRingtoneInvalid == false)
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, mLoadedURI);
+
       intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, PICKER_PROMPT);
       intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
       intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
