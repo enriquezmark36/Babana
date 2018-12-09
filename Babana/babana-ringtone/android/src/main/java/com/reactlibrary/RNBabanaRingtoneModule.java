@@ -19,12 +19,14 @@ import android.util.Log;
 import android.provider.MediaStore;
 import android.content.Intent;
 import android.app.Activity;
+import android.provider.Settings;
 
 public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
   private MediaPlayer mCurrentRingtone = null;
   private Uri mLoadedURI = null;
+  private Boolean mRingtoneInvalid;
 
   // Android Log tag
   private static final String ALOG_TAG = "babana-ringtone";
@@ -58,7 +60,7 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
           // The user cancelled. We can't do anything about this, right?
           mPickerPromise.resolve(null);
         } else {
-          mPickerPromise.reject(E_UNKNOWN, "Picker results to " + resultCode);
+          mPickerPromise.reject(E_UNKNOWN, "Picker resulted to " + resultCode);
         }
         mPickerPromise = null;
       }
@@ -66,19 +68,30 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
   };
 
   private void setCurrentRingtone(Uri uri) {
-    if (mCurrentRingtone != null) {
-      mCurrentRingtone.stop();
+    if (mLoadedURI != null) {
       mCurrentRingtone.reset();
     }
 
     mLoadedURI = uri;
+    mRingtoneInvalid = false;
+
+    if (uri == null) {
+      Log.v(ALOG_TAG, "Silent Ringtone");
+      return;
+    }
+
+    // We don't really know if a ringtone is invalid until this try
+    // clause fails. Regardless of any error, any URI loaded will be
+    // considered as an invalid Ringtone.
     try {
-      mCurrentRingtone.setDataSource(getCurrentActivity(), uri);
+      mCurrentRingtone.setDataSource(getReactApplicationContext(), mLoadedURI);
       mCurrentRingtone.setAudioStreamType(AudioManager.STREAM_ALARM);
       mCurrentRingtone.setLooping(true);
       mCurrentRingtone.prepare();
+      Log.v(ALOG_TAG, "Ringtone Loaded");
     } catch (Exception e) {
-      Log.e(ALOG_TAG, "Ringtone loading failed", e);
+      Log.e(ALOG_TAG, "Could not load Ringtone", e);
+      mRingtoneInvalid = true;
     }
 
   }
@@ -130,36 +143,33 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void loadDefaultRingtone() {
-    // This should use TYPE_ALARM, but... there is NO default for TYPE_ALARM.
-    // At least, for AOSP based phone it seems to be like that.
-    Uri defaultRingtoneUri = RingtoneManager
-        .getActualDefaultRingtoneUri(getCurrentActivity().getApplicationContext(),
-                                     RingtoneManager.TYPE_RINGTONE);
-    setCurrentRingtone(defaultRingtoneUri);
+    // This should use TYPE_ALARM, but there is NO default for TYPE_ALARM.
+    // At least for AOSP based phones, it seems to be like that.
+    setCurrentRingtone(Settings.System.DEFAULT_RINGTONE_URI);
   }
 
   @ReactMethod
   public void loadRingtone(String uri, final Promise promise) {
     if (uri == null) {
+      setCurrentRingtone(null);
       promise.reject(E_NULL, "Ringtone URI is null");
       return;
     }
 
+    // We won't check if the Uri is invalid.
+    // If it is invalid, we just get a no-op or a Silent Ringtone.
     setCurrentRingtone(Uri.parse(uri));
-
-    // We check, if the URI is valid, that is, upon loading,
-    // mCurrentRingtone is not null
-    if (mCurrentRingtone == null) {
-      promise.reject(E_INVAL, "Ringtone URI is invalid");
-    }
 
     promise.resolve(null);
   }
 
   @ReactMethod
   public void getLoadedRingtone(Callback errorCallback, Callback successCallback) {
-    if (mCurrentRingtone == null) {
-      errorCallback.invoke(E_NULL, "Ringtone not yet loaded");
+    if (mLoadedURI == null) {
+      successCallback.invoke("", "", true);
+      return;
+    } else if (mRingtoneInvalid == true) {
+      errorCallback.invoke(E_INVAL, "Ringtone might be invalid");
       return;
     }
 
@@ -167,15 +177,18 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
     // purpose but it helps to not re-implement some untested voo-doo
     // that might break in the most unexpected ways.
     successCallback.invoke(
-        RingtoneManager.getRingtone(getCurrentActivity(), mLoadedURI)
-              .getTitle(getCurrentActivity().getApplicationContext()),
-        mLoadedURI.toString());
+        RingtoneManager.getRingtone(getReactApplicationContext(), mLoadedURI)
+              .getTitle(getReactApplicationContext().getApplicationContext()),
+        mLoadedURI.toString(), false);
   }
 
   @ReactMethod
   public void playRingtone(final Promise promise) {
-    if (mCurrentRingtone == null) {
+    if (mLoadedURI == null) {
       promise.reject(E_NULL, "Ringtone not yet loaded");
+      return;
+    } else if (mRingtoneInvalid == true) {
+      promise.reject(E_NULL, "Ringtone might be invalid");
       return;
     }
     mCurrentRingtone.start();
@@ -183,8 +196,11 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void stopRingtone(final Promise promise) {
-    if (mCurrentRingtone == null) {
+    if (mLoadedURI == null) {
       promise.reject(E_NULL, "Ringtone not yet loaded");
+      return;
+    } else if (mRingtoneInvalid == true) {
+      promise.reject(E_NULL, "Ringtone might be invalid");
       return;
     }
     mCurrentRingtone.stop();
