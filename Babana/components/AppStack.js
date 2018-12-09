@@ -68,6 +68,18 @@ const AppStack = createStackNavigator(
     Home: { screen: disableHeaderIfUndef(App)},
     ...routes,
   },
+  {
+    navigationOptions: ({ navigation }) => {
+      let drawerLockMode = 'unlocked';
+      if (navigation.state.index > 0) {
+        drawerLockMode = 'locked-closed';
+      }
+
+      return {
+        drawerLockMode,
+      };
+    }
+  }
 )
 
-export default createAppContainer(AppStack);
+export default AppStack;
