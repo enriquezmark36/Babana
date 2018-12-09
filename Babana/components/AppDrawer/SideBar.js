@@ -16,8 +16,10 @@ class SideBar extends PureComponent {
   }
 
   _renderRoutesOnPress = (item, index) => {
-    this.setState({selectedKey: index});
     this.props.navigation.navigate(item);
+
+    // Please replace this something that tracks the current screen
+    //this.setState({selectedKey: index});
   }
 
   _renderRoutes = ({ item, index, section: { title, data } }) => (
