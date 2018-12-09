@@ -60,7 +60,6 @@ export default class ringtone extends PureComponent {
 
   async _loadSavedRingtone(obj) {
     state = JSON.parse(obj);
-    console.log(state.RingtoneURI);
     this.setState(state);
     BabanaRingtone
       .loadRingtone(state.RingtoneURI)
@@ -78,7 +77,6 @@ export default class ringtone extends PureComponent {
         console.log(errmsg+ '(\'' + errcode + '\')')
       },
       (title, uri, is_null) => {
-        console.log(title, uri, is_null);
         if (is_null === true) {
           this.setState({RingtoneURI: null, RingtoneName: "Silent"});
         } else {
