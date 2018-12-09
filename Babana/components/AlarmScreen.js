@@ -12,6 +12,7 @@ const {
   TouchableNativeFeedback,
   ToastAndroid,
   AsyncStorage,
+  BackHandler,
 } = ReactNative ;
 
 export default class AlarmScreen extends Component {
@@ -42,6 +43,16 @@ export default class AlarmScreen extends Component {
     navigation.goBack();
   }
 
+  // Ignore all back button presses
+  _handleBackPress() {
+    return true;
+  }
+
+  componentWillUnmount() {
+    // Remove the back blocker, try saying that five times fast.
+    BackHandler.removeEventListener('hardwareBackPress', this._handleBackPress);
+  }
+
   componentDidMount(){
     const {navigation} = this.props;
 
@@ -56,6 +67,10 @@ export default class AlarmScreen extends Component {
     // Or try loading it first then play if it fails
     BabanaRingtone.playRingtone()
         .catch ((error) =>{console.log(error)});
+
+    // Disallow the usage of back button
+    // Seriously, We need the user to hit the OK button or something
+    BackHandler.addEventListener('hardwareBackPress', this._handleBackPress);
 
     // Aparently, there's only one case we won't
     // Activate vibration:
