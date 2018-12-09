@@ -301,6 +301,7 @@ export default class Map extends Component{
                             {alarmState}
                         </CardItem>
                     </Card>
+                    <Text style={{textAlign: 'center'}}>Scroll down for SMS Functionality</Text>
                     <Card>
                       <CardItem button onPress={this._showNotifyPage.bind(this)}>
                         {notifyState}
