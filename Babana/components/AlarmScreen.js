@@ -55,12 +55,7 @@ export default class AlarmScreen extends Component {
     // Set play the Ringtone
     // Or try loading it first then play if it fails
     BabanaRingtone.playRingtone()
-        .catch ((error) =>{
-          // Load Default ringtone then it still fails then log
-          BabanaRingtone.loadDefaultRingtone();
-          BabanaRingtone.playRingtone()
-            .catch ((error) =>{console.log(error)});
-        });
+        .catch ((error) =>{console.log(error)});
 
     // Aparently, there's only one case we won't
     // Activate vibration:
