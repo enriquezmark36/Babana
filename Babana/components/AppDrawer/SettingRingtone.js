@@ -21,6 +21,8 @@ const {
   Content,
 } = NativeBase;
 
+const SettingAsyncKey = 'RingtoneSettings';
+
 export default class ringtone extends PureComponent {
   constructor(props) {
     super(props);
@@ -40,51 +42,61 @@ export default class ringtone extends PureComponent {
 
     // Would this cause a double error message?
     BabanaRingtone.getLoadedRingtone(
-      (errcode, errmsg) => {},
-      (title, uri) => {
-        this.setState({RingtoneURI: uri, RingtoneName: title})
-        AsyncStorage.setItem('RingtoneUri', uri)
+      (errcode, errmsg) => {console.log(errcode, errmsg);},
+      (title, uri, is_null) => {
+        if (is_null === true) {
+          uri = null;
+          title = "Silent";
+        }
+
+        state = {RingtoneURI: uri, RingtoneName: title};
+        this.setState(state);
+        AsyncStorage.setItem(SettingAsyncKey, JSON.stringify(state))
           .catch ((error) =>{console.log(error)});
       }
     );
 
   }
 
+  async _loadSavedRingtone(obj) {
+    state = JSON.parse(obj);
+    console.log(state.RingtoneURI);
+    this.setState(state);
+    BabanaRingtone
+      .loadRingtone(state.RingtoneURI)
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  _loadDefaultRingtone() {
+    BabanaRingtone.loadDefaultRingtone();
+
+    BabanaRingtone.getLoadedRingtone(
+      (errcode, errmsg) => {
+        /* I dunno how this code path would be reached */
+        console.log(errmsg+ '(\'' + errcode + '\')')
+      },
+      (title, uri, is_null) => {
+        console.log(title, uri, is_null);
+        if (is_null === true) {
+          this.setState({RingtoneURI: null, RingtoneName: "Silent"});
+        } else {
+          this.setState({RingtoneURI: uri, RingtoneName: title});
+        }
+      }
+    );
+  }
+
   componentWillMount() {
-    AsyncStorage.getItem('RingtoneUri')
+    AsyncStorage.getItem(SettingAsyncKey)
       .then((value) => {
         if(value) { // Success, key matched
-          BabanaRingtone
-              .loadRingtone(value)
-              .then(() =>{
-                BabanaRingtone.getLoadedRingtone(
-                  (errcode, errmsg) => {/* can only fail if invalid */},
-                  (title, uri) => {
-                    this.setState({RingtoneURI: uri, RingtoneName: title})
-                  }
-                );
-              }).catch((error) => {
-                console.log(error, "1")
-              });
+          this._loadSavedRingtone(value);
         } else { // Still Success, but key didn't matched
-          BabanaRingtone
-              .loadDefaultRingtone()
-              .then(() => {
-                BabanaRingtone.getLoadedRingtone(
-                  (errcode, errmsg) => {
-                    /* I dunno how this code path would be reached */
-                    console.log(errmsg+ '(\'' + errcode + '\')')
-                  },
-                  (title, uri) => {
-                    this.setState({RingtoneURI: uri, RingtoneName: title})
-                  }
-                );
-              }).catch((error) =>{
-                console.log(error)
-              });
+          this._loadDefaultRingtone();
         }
-      })
-      .catch ((error) =>{console.log(error)});
+      }).catch ((error) =>{console.log(error)});
   }
 
   render() {
