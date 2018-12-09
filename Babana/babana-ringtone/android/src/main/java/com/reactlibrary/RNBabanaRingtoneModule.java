@@ -204,5 +204,10 @@ public class RNBabanaRingtoneModule extends ReactContextBaseJavaModule {
       return;
     }
     mCurrentRingtone.stop();
+
+    // Reset MediaPlayer, for the next playback
+    // Unfortunately, prepare() causes some glitches in the playback
+    Log.v(ALOG_TAG, "Stopping then Resetting...");
+    setCurrentRingtone(mLoadedURI);
   }
 }
