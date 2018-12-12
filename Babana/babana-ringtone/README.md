@@ -50,29 +50,53 @@ If this didn't work out for you, please try the Manual installation below.
 import BabanaRingtone from 'react-native-babana-ringtone';
 ```
 
-##### Note: All methods here, except for `BabanaRingtone.loadDefaultRingtone()`, returns a **promise**. On resolve cases, the value is always null. On reject cases, the value is the error occurred.
-
-
 ### `BabanaRingtone.pickRingtone()`
 
-Opens the Android ringtone picker for all type of Ringtones (Notification, Alarm, Ringtone).
-Automatically stops the playing Ringtone **only after selection**.
+Opens the Android ringtone picker for all types of Ringtones (Notification, Alarm, Ringtone).
+Automatically stops the playing Ringtone **only after selection**. 
+
+Returns a Promise whose value on success is always null.  
+On failures, the value is an object with `Error` and `code` keys containing the error message and error code, respectively.  
+The possible error codes are `'E_SHOW_PICKER_FAILED'`, and `'E_ACTIVITY_DNE'`, and `'E_UNKNOWN'`.
 
 
 ### `BabanaRingtone.loadDefaultRingtone()`
 
 Loads the Default ringtone with `TYPE_RINGTONE`, or the ringtone the plays during ingoing calls.
-Automatically stops the playing Ringtone.
+Automatically stops the ringtone played through `.playRingtone()`.
 
+Returns nothing.
+
+### `BabanaRingtone.loadRingtone(URI)`
+
+Loads the ringtone from the specified `URI` string.
+
+Returns a Promise whose value on success is always null.  
+On failure cases, the value is an object with `Error` and `code` keys containing the error message and error code, respectively.  
+The possible error codes are `'E_INVAL'`, and `'E_NULL'`.
+
+### `BabanaRingtone.getLoadedRingtone(errorCallback, successCallback)`
+
+Attemps to retrieve the human readable name and the stringified uri of the currently loaded ringtone.
+
+`errorCallback` is a function that takes 2 arguments in order: `errcode`, then `errmsg` of which contains the error code and message. Usually called when there's no ringtone loaded.
+
+`successCallback` is also a function that takes 2 arguments in order: `title`, then `uri` of which contains the ringtone's name and uri. Both of them are strings. 
+
+Returns nothing.
 
 ### `BabanaRingtone.playRingtone()`
 
 Plays the loaded Ringtone.
+Returns a Promise whose value on success is always null.
+
+On failure cases, the value is an object with `Error` and `code` keys containing the error message and error code, respectively.  
+The only possible error code is `'E_NULL'`.
 
 
 ### `BabanaRingtone.stopRingtone()`
 
-Stops the loaded Ringtone if already playing.
+Stops the loaded Ringtone if already playing. Works pretty much the same as the `.playRingtone()`.
 
 ## Reporting Issues
 Please use the Babana project issue tracker on github. Don't email me.

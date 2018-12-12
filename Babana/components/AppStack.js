@@ -65,9 +65,21 @@ function disableHeaderIfUndef(Comp) {
 
 const AppStack = createStackNavigator(
   {
-    App: { screen: disableHeaderIfUndef(App)},
+    Home: { screen: disableHeaderIfUndef(App)},
     ...routes,
   },
+  {
+    navigationOptions: ({ navigation }) => {
+      let drawerLockMode = 'unlocked';
+      if (navigation.state.index > 0) {
+        drawerLockMode = 'locked-closed';
+      }
+
+      return {
+        drawerLockMode,
+      };
+    }
+  }
 )
 
-export default createAppContainer(AppStack);
+export default AppStack;
