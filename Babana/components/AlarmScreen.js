@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import * as ReactNative from 'react-native';
 import {Container, Title, Header, Body, Button, Text} from 'native-base';
 import CountdownCircle from 'react-native-countdown-circle'
-import SendSMS from 'react-native-sms-x';
 import BabanaRingtone from 'react-native-babana-ringtone';
 
 const {
@@ -13,6 +12,7 @@ const {
   ToastAndroid,
   AsyncStorage,
   BackHandler,
+  Linking,
 } = ReactNative ;
 
 export default class AlarmScreen extends Component {
@@ -25,7 +25,6 @@ export default class AlarmScreen extends Component {
         message: '',
       };
       this._sendSms = this._sendSms.bind(this);
-      this._smsCallback = this._smsCallback.bind(this);
   }
 
   //Disables the header bar
@@ -97,39 +96,28 @@ export default class AlarmScreen extends Component {
   }
 
   _cancelSms() {
-    this.setState({sendCanceled: true, isSent: true});
-    const {sendCanceled, isSent} = this.state;
-
     if (this.state.isSent === true)
       return;
-  }
 
-  _smsCallback(msg, recipient) {
-    if (msg === 'SMS sent')
-      return;
-
-    if (recipient.fullname !== '')
-      name = recipient.fullname + " - ";
-
-    name = name + recipient.number;
-
-    ToastAndroid.show('Failed to Send to ' + name + ": " + msg,
-                      ToastAndroid.LONG);
+    this.setState({sendCanceled: true, isSent: true});
   }
 
   _sendSms() {
     const {contactList, message} = this.state;
+    let url = 'smsto:';
 
     if (this.state.isSent === true)
       return;
 
     contactList.forEach((person) => {
-      SendSMS.send(
-        Number(person.id),
-        person.number,
-        message,
-        (msgId, msg) => this._smsCallback(msg, person));
+      url += `${person.number},`;
     });
+    url = url.substring(0, url.length - 1) + `?body=${encodeURIComponent(message)}`;
+
+    Linking.canOpenURL(url).then(supported => {
+      if(supported)
+        Linking.openURL(url).catch(err => ToastAndroid.show(err, ToastAndroid.LONG));
+    }).catch(err => ToastAndroid.show(err, ToastAndroid.LONG));
 
     this.setState({isSent:true});
   }
@@ -165,19 +153,9 @@ export default class AlarmScreen extends Component {
         </View>
       );
     } else {
-      if (this.state.contactList.length === 1){
-        if (this.state.contactList[0].fullname !== ''){
-          peopleText = this.state.contactList[0].fullname.trim();
-        } else {
-          peopleText = "one person";
-        }
-      } else {
-        peopleText = this.state.contactList.length + " people";
-      }
       return(
         <View style={styles.smsCancel}>
-
-          <Text> Message sent to {peopleText}.</Text>
+          <Text>Opened the default messaging app.</Text>
         </View>
       );
     }

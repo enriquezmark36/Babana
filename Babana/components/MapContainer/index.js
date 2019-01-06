@@ -186,14 +186,6 @@ export default class Map extends Component{
     // For Alarm Notify Page
     //
     _showNotifyPage() {
-        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.SEND_SMS).then(
-          response => {
-              if(response === false){
-                  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.SEND_SMS);
-              }
-          }
-        )
-
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE).then(
             response => {
                 if(response === false){
